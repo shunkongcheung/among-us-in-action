@@ -1,3 +1,4 @@
 import AppBar from "./AppBar";
+import Map from "./Map";
 
-export { AppBar };
+export { AppBar, Map };
