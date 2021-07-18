@@ -12,6 +12,12 @@ import {
   Stack,
 } from "native-base";
 
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  names,
+} from "unique-names-generator";
+
 import { AppBar } from "../../components";
 
 import OptionModal from "./OptionModal";
@@ -58,7 +64,10 @@ const COLORS = [
 const Login: React.FC = () => {
   const { handleBlur, handleChange, setFieldValue, values } = useFormik({
     initialValues: {
-      displayName: "",
+      displayName: uniqueNamesGenerator({
+        dictionaries: [adjectives, names],
+        separator: " ",
+      }).toLowerCase(),
       color: "red",
       hat: HATS[0],
     },
@@ -80,11 +89,8 @@ const Login: React.FC = () => {
       />
       <AppBar>Among Us</AppBar>
       <Box flex={1} mx={3} my={5}>
-        <Heading size="xl" color="primary.500" pb={1} mr="auto" mb={5}>
-          Settings
-        </Heading>
-        <Box my="auto" height="50%" justifyContent="space-between">
-          <FormControl mb={5}>
+        <Box height="50%" justifyContent="space-between">
+          <FormControl>
             <FormControl.Label>Display name</FormControl.Label>
             <Stack>
               <Input
@@ -92,6 +98,7 @@ const Login: React.FC = () => {
                 placeholder="Display name"
                 onBlur={handleBlur("displayName")}
                 onChangeText={handleChange("displayName")}
+                value={values.displayName}
               />
             </Stack>
           </FormControl>
