@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   FormControl,
-  Heading,
   Image,
   Input,
   Stack,
@@ -19,8 +18,11 @@ import {
 } from "unique-names-generator";
 
 import { AppBar } from "../../components";
+import { User } from "../../types";
 
 import OptionModal from "./OptionModal";
+import useUserContext from "../../useUserContext";
+import {useNavigation} from "@react-navigation/native";
 
 interface ModalState {
   fieldName: "hat" | "color";
@@ -62,17 +64,23 @@ const COLORS = [
 ];
 
 const Login: React.FC = () => {
-  const { handleBlur, handleChange, setFieldValue, values } = useFormik({
-    initialValues: {
-      displayName: uniqueNamesGenerator({
-        dictionaries: [adjectives, names],
-        separator: " ",
-      }).toLowerCase(),
-      color: "red",
-      hat: HATS[0],
-    },
-    onSubmit: () => {},
-  });
+  const { setUser } = useUserContext();
+  const { navigate } = useNavigation()
+  const { handleBlur, handleChange, handleSubmit, setFieldValue, values } =
+    useFormik({
+      initialValues: {
+        displayName: uniqueNamesGenerator({
+          dictionaries: [adjectives, names],
+          separator: " ",
+        }).toLowerCase(),
+        color: "red",
+        hat: HATS[0],
+      },
+      onSubmit: (user: User) => {
+        setUser(user);
+        // navigate('RoomSelect')
+      },
+    });
 
   const [modalState, setModalState] = React.useState<ModalState>({
     fieldName: "hat",
@@ -164,7 +172,7 @@ const Login: React.FC = () => {
           </FormControl>
         </Box>
         <Box width="100%" mt="auto">
-          <Button>Let's Go!</Button>
+          <Button onPress={handleSubmit as any}>Let's Go!</Button>
         </Box>
       </Box>
     </>
