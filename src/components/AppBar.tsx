@@ -6,11 +6,14 @@ import {
   Text,
   Box,
   StatusBar,
+  ArrowForwardIcon,
 } from "native-base";
+import { useNavigation } from "@react-navigation/native";
 
 interface AppBarProps {
   bgColor?: string;
   children: string;
+  goNext?: () => any;
   isBackable?: boolean;
   textColor?: string;
 }
@@ -18,15 +21,16 @@ interface AppBarProps {
 const AppBar: React.FC<AppBarProps> = ({
   bgColor = "primary.500",
   children,
+  goNext,
   isBackable = false,
   textColor = "white",
 }) => {
+  const isNoIcon = !goNext && !isBackable;
+  const { goBack } = useNavigation();
   return (
     <>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />
-
       <Box safeAreaTop backgroundColor={bgColor} />
-
       <HStack
         bg={bgColor}
         px={1}
@@ -36,17 +40,26 @@ const AppBar: React.FC<AppBarProps> = ({
       >
         <HStack
           space={4}
-          my={isBackable ? 0 : 3}
+          my={isNoIcon ? 3 : 0}
           ml={isBackable ? 0 : 5}
           alignItems="center"
         >
           {isBackable && (
-            <IconButton icon={<ArrowBackIcon color={textColor} />} />
+            <IconButton
+              icon={<ArrowBackIcon color={textColor} />}
+              onPress={() => goBack()}
+            />
           )}
           <Text color={textColor} fontSize={20} fontWeight="bold">
             {children}
           </Text>
         </HStack>
+        {!!goNext && (
+          <IconButton
+            icon={<ArrowForwardIcon color={textColor} />}
+            onPress={goNext}
+          />
+        )}
       </HStack>
     </>
   );
