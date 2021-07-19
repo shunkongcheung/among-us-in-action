@@ -1,4 +1,5 @@
 export interface CheckPoint {
+  id: number;
   latitude: number;
   longitude: number;
   task: Task;
