@@ -1,8 +1,8 @@
 import { gql, useMutation } from "@apollo/client";
 import { useCallback } from "react";
 
+import { useUserContext } from "../../hooks";
 import { Player } from "../../types";
-import useUserContext from "../../useUserContext";
 
 const REGISTER = gql`
   mutation Register($player: PlayerInputType!) {
