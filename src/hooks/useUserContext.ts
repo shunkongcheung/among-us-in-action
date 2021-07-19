@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Player } from "./types";
+import { Player } from "../types";
 
 interface UserContextState extends Player {
   setUser: (user: Player) => any;
