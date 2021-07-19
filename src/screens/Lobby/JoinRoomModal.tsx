@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { Button, Input, Modal } from "native-base";
 import { useFormik } from "formik";
 
-import useUserContext from "../../useUserContext";
+import { useUserContext } from "../../hooks";
 
 interface JoinRoomModalProps {
   open: boolean;
