@@ -1,14 +1,15 @@
 import { createContext, useContext } from "react";
-import { User } from "./types";
+import { Player } from "./types";
 
-interface UserContextState extends User {
-  setUser: (user: User) => any;
+interface UserContextState extends Player {
+  setUser: (user: Player) => any;
 }
 
 export const UserContext = createContext<UserContextState>({
-  displayName: "",
+  id: -1,
+  name: "",
   color: "",
-  hat: { name: "", source: "" },
+  hat: "",
   setUser: () => {},
 });
 
