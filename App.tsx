@@ -1,26 +1,37 @@
 import React from "react";
 import { NativeBaseProvider, theme, extendTheme } from "native-base";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
+import { useRoomState, RoomContext } from "./src/hooks/useRoomContext";
+import { useUserState, UserContext } from "./src/hooks/useUserContext";
 import Navigations from "./src/navigations";
-import { UserContext } from "./src/useUserContext";
-import { User } from "./src/types";
+import typeDefs from "./src/typeDefs";
+
+const client = new ApolloClient({
+  uri: "https://among-us.crestedmyna.com/graphql",
+  cache: new InMemoryCache(),
+  typeDefs,
+});
 
 export default function App() {
-  const [user, setUser] = React.useState<User>({
-    displayName: "",
-    color: "",
-    hat: { name: "", source: "" },
-  });
   const newTheme = extendTheme({
     colors: {
       primary: theme.colors.indigo,
     },
   });
+
+  const user = useUserState();
+  const room = useRoomState(user.id);
+
   return (
-    <NativeBaseProvider theme={newTheme}>
-      <UserContext.Provider value={{ ...user, setUser }}>
-        <Navigations />
-      </UserContext.Provider>
-    </NativeBaseProvider>
+    <ApolloProvider client={client}>
+      <NativeBaseProvider theme={newTheme}>
+        <UserContext.Provider value={user}>
+          <RoomContext.Provider value={room}>
+            <Navigations />
+          </RoomContext.Provider>
+        </UserContext.Provider>
+      </NativeBaseProvider>
+    </ApolloProvider>
   );
 }

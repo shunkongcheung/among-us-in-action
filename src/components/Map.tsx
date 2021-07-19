@@ -1,13 +1,8 @@
 import React, { memo } from "react";
 import { Box, Center, Spinner } from "native-base";
-import {
-  requestForegroundPermissionsAsync,
-  watchHeadingAsync,
-} from "expo-location";
+import { watchHeadingAsync } from "expo-location";
 import MapView, { Marker } from "react-native-maps";
-
-import { getCurrentLocation } from "../utils";
-import { Alert } from "react-native";
+import { useUserContext } from "../hooks";
 
 export interface Location {
   latitude: number;
@@ -49,6 +44,7 @@ const Map: React.FC<MapProps> = ({
   onLongPress,
   onRegionChange,
 }) => {
+  const { location: userLocation } = useUserContext();
   const [region, setRegion] = React.useState(initialRegion);
   const mapRef = React.useRef<MapView>(null);
 
@@ -63,24 +59,15 @@ const Map: React.FC<MapProps> = ({
   React.useEffect(() => {}, [isCurrentRegion, onRegionChange]);
 
   React.useEffect(() => {
-    const fetchCurrent = async () => {
-      // get current location
-      const region = await getCurrentLocation();
-
-      // default map size
-      setRegion({ ...region, latitudeDelta: 0.00922, longitudeDelta: 0.00421 });
-    };
-
     (async () => {
-      // fetch permission before all operation
-      const { status } = await requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert("Permission to access location was denied");
-        return;
-      }
-
       // if location should be set to current
-      if (!!isCurrentRegion) fetchCurrent();
+      if (!!isCurrentRegion) {
+        setRegion({
+          ...userLocation,
+          latitudeDelta: 0.00922,
+          longitudeDelta: 0.00421,
+        });
+      }
 
       // if is directed
       if (isCampassed) {
@@ -89,7 +76,7 @@ const Map: React.FC<MapProps> = ({
         });
       }
     })();
-  }, [isCurrentRegion, isCampassed]);
+  }, [isCurrentRegion, isCampassed, userLocation, setRegion]);
 
   return (
     <Box flex={1}>

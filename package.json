@@ -8,12 +8,15 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.21",
+    "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
     "expo": "~42.0.1",
     "expo-location": "~12.1.2",
     "expo-status-bar": "~1.0.4",
     "formik": "^2.2.9",
+    "graphql": "^15.5.1",
     "native-base": "^3.0.6",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -27,6 +30,7 @@
     "react-native-web": "~0.13.12",
     "styled-components": "^5.3.0",
     "styled-system": "^5.1.5",
+    "subscriptions-transport-ws": "^0.9.19",
     "unique-names-generator": "^4.5.0",
     "yup": "^0.32.9"
   },
