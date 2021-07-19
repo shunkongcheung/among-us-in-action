@@ -72,13 +72,6 @@ const Map: React.FC<MapProps> = ({
     };
 
     (async () => {
-      // fetch permission before all operation
-      const { status } = await requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert("Permission to access location was denied");
-        return;
-      }
-
       // if location should be set to current
       if (!!isCurrentRegion) fetchCurrent();
 
