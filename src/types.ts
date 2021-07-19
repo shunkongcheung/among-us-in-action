@@ -5,6 +5,7 @@ export interface CheckPoint {
 }
 
 export interface Game {
+  id: number;
   name: string;
   maxParticipantCount: number;
   totalTask: number;
@@ -20,11 +21,12 @@ export interface Game {
 export interface Room {
   id: number;
   code: string;
+  game: Game;
   participants: Array<Player>;
   survivers: Array<Player>;
   imposters: Array<Player>;
-  startAt: Date;
-  endAt: Date;
+  startAt?: Date;
+  endAt?: Date;
 }
 
 export interface Player {
