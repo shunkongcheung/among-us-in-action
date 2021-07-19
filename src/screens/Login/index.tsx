@@ -37,7 +37,7 @@ const Login: React.FC = () => {
       },
       onSubmit: async (user: Player) => {
         await register(user);
-        navigate("EditGameInfo");
+        navigate("Lobby");
       },
     });
 
