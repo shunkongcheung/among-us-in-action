@@ -30,15 +30,17 @@ interface MapProps {
   isCurrentRegion?: boolean;
   is3d?: boolean;
   isCampassed?: boolean;
+  isShowSelf?: boolean;
   markers?: Array<MarkerProps>;
   onLongPress?: (location: Location) => any;
-  onRegionChange: (region: Region | RegionCallback) => any;
+  onRegionChange?: (region: Region | RegionCallback) => any;
 }
 
 const Map: React.FC<MapProps> = ({
   isCurrentRegion,
   isCampassed = false,
   is3d = false,
+  isShowSelf = false,
   initialRegion,
   markers = [],
   onLongPress,
@@ -90,6 +92,7 @@ const Map: React.FC<MapProps> = ({
             center: region!,
             zoom: 1,
           }}
+          showsUserLocation={isShowSelf}
           onRegionChange={onRegionChange}
           onLongPress={onLongPressLocal}
           ref={mapRef}
