@@ -1,8 +1,42 @@
-export interface User {
-  displayName: string;
+export interface CheckPoint {
+  latitude: number;
+  longitude: number;
+  task: Task;
+}
+
+export interface Game {
+  name: string;
+  maxParticipantCount: number;
+  totalTask: number;
+  durationMinute: number;
+  imposterCount: number;
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+  checkPoints: Array<CheckPoint>;
+}
+
+export interface Room {
+  id: number;
+  code: string;
+  participants: Array<Player>;
+  survivers: Array<Player>;
+  imposters: Array<Player>;
+  startAt: Date;
+  endAt: Date;
+}
+
+export interface Player {
+  id: number;
+  name: string;
   color: string;
-  hat: {
-    name: string;
-    source: any;
-  };
+  hat: string;
+}
+
+export enum Task {
+  WIRE = "WIRE",
+  UPLOAD = "UPLOAD",
+  DOWNLOAD = "DOWNLOAD",
+  EXPERIMENT = "EXPERIMENT",
 }
