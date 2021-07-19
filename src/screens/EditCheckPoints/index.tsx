@@ -47,14 +47,14 @@ const EditCheckPoints: React.FC<EditCheckPointsProps> = () => {
     (location: Location) =>
       setMarkers((o) => ({
         ...o,
-        [uuid.v4() as string]: { ...location, task: getRandomTask() },
+        [uuid.v4() as string]: { id: -1, ...location, task: getRandomTask() },
       })),
     [setMarkers]
   );
 
   const onNext = React.useCallback(async () => {
     const checkPoints = Object.values(markers);
-    await submit({ ...formInfo, ...region, checkPoints });
+    await submit({ id: -1, ...formInfo, ...region, checkPoints });
     navigate("Room", { screen: "RoomInfo" });
   }, [markers, formInfo, region, submit, navigate]);
 
