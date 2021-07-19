@@ -55,7 +55,7 @@ const EditCheckPoints: React.FC<EditCheckPointsProps> = () => {
   const onNext = React.useCallback(async () => {
     const checkPoints = Object.values(markers);
     await submit({ ...formInfo, ...region, checkPoints });
-    navigate("GameRoom");
+    navigate("Room", { screen: "RoomInfo" });
   }, [markers, formInfo, region, submit, navigate]);
 
   const renderMarkers = React.useMemo(
