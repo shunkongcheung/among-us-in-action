@@ -1,5 +1,6 @@
 import React, { memo, ReactNode } from "react";
 import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import {
   AspectRatio,
@@ -8,21 +9,14 @@ import {
   FormControl,
   Image,
   Input,
-  Stack,
 } from "native-base";
 
-import {
-  uniqueNamesGenerator,
-  adjectives,
-  names,
-} from "unique-names-generator";
-
 import { AppBar } from "../../components";
+import { getRandomName } from "../../utils";
 import { User } from "../../types";
 
 import OptionModal from "./OptionModal";
 import useUserContext from "../../useUserContext";
-import {useNavigation} from "@react-navigation/native";
 
 interface ModalState {
   fieldName: "hat" | "color";
@@ -65,20 +59,17 @@ const COLORS = [
 
 const Login: React.FC = () => {
   const { setUser } = useUserContext();
-  const { navigate } = useNavigation()
+  const { navigate } = useNavigation();
   const { handleBlur, handleChange, handleSubmit, setFieldValue, values } =
     useFormik({
       initialValues: {
-        displayName: uniqueNamesGenerator({
-          dictionaries: [adjectives, names],
-          separator: " ",
-        }).toLowerCase(),
+        displayName: getRandomName(),
         color: "red",
         hat: HATS[0],
       },
       onSubmit: (user: User) => {
         setUser(user);
-        // navigate('RoomSelect')
+        navigate("EditGameInfo");
       },
     });
 
@@ -96,19 +87,17 @@ const Login: React.FC = () => {
         options={modalState.options}
       />
       <AppBar>Among Us</AppBar>
-      <Box flex={1} mx={3} my={5}>
-        <Box height="50%" justifyContent="space-between">
+      <Box flex={1} mx={3} my={5} px={10} pb={10}>
+        <Box my="auto" height="50%" justifyContent="space-between">
           <FormControl>
             <FormControl.Label>Display name</FormControl.Label>
-            <Stack>
-              <Input
-                p={2}
-                placeholder="Display name"
-                onBlur={handleBlur("displayName")}
-                onChangeText={handleChange("displayName")}
-                value={values.displayName}
-              />
-            </Stack>
+            <Input
+              p={2}
+              placeholder="Display name"
+              onBlur={handleBlur("displayName")}
+              onChangeText={handleChange("displayName")}
+              value={values.displayName}
+            />
           </FormControl>
           <FormControl mb={5}>
             <FormControl.Label>Hat</FormControl.Label>
