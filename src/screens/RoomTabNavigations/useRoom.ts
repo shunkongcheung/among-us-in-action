@@ -1,25 +1,14 @@
 import {
   gql,
   useSubscription,
-  ApolloClient,
-  InMemoryCache,
   useMutation,
+  ApolloClient,
+  NormalizedCacheObject,
 } from "@apollo/client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { WebSocketLink } from "@apollo/client/link/ws";
 
 import { useLocalGames, useUserContext } from "../../hooks";
 import { Game, Player, Room } from "../../types";
-
-const wsLink = new WebSocketLink({
-  uri: "wss://among-us.crestedmyna.com/subscriptions",
-  options: { reconnect: true },
-});
-
-const client = new ApolloClient({
-  link: wsLink,
-  cache: new InMemoryCache(),
-});
 
 interface RoomRet {
   id: number;
@@ -82,7 +71,9 @@ const ROOM_SUBSCRIPTION = gql`
   }
 `;
 
-const useRoom = (): Room | undefined => {
+const useRoom = (
+  client: ApolloClient<NormalizedCacheObject>
+): Room | undefined => {
   const { id: playerId } = useUserContext();
   const [minutePast, setMinutePast] = useState(0);
 

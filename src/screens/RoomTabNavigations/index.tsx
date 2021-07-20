@@ -1,4 +1,6 @@
 import React from "react";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { WebSocketLink } from "@apollo/client/link/ws";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,6 +9,16 @@ import useRoom from "./useRoom";
 import RoomInfo from "../RoomInfo";
 import RoomMap from "../RoomMap";
 import RoomParticipants from "../RoomParticipants";
+
+const wsLink = new WebSocketLink({
+  uri: "wss://among-us.crestedmyna.com/subscriptions",
+  options: { reconnect: true },
+});
+
+const client = new ApolloClient({
+  link: wsLink,
+  cache: new InMemoryCache(),
+});
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +44,7 @@ const screenOptions = ({ route }: any) => {
 };
 
 function RoomTabNavigations() {
-  const room = useRoom();
+  const room = useRoom(client);
   const { navigate } = useNavigation();
 
   const isStarted = room?.isStarted ?? false;
