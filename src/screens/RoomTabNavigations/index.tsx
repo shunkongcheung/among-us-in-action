@@ -41,6 +41,8 @@ function RoomTabNavigations() {
     if (isStarted) navigate("RoomMap", { isCharacterModal: true });
   }, [isStarted]);
 
+  if (!room) return <></>;
+
   return (
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
@@ -53,11 +55,15 @@ function RoomTabNavigations() {
         component={RoomParticipants}
         options={{ title: "Participants" }}
       />
-      <Tab.Screen
-        name="RoomInfo"
-        component={RoomInfo}
-        options={{ title: "Info." }}
-      />
+      <Tab.Screen name="RoomInfo" options={{ title: "Info." }}>
+        {() => (
+          <RoomInfo
+            {...room}
+            {...room.game}
+            participantCount={room.participants.length}
+          />
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }

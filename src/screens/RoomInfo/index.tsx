@@ -3,7 +3,6 @@ import { Box, Button, Center, StatusBar, useTheme } from "native-base";
 import QRCode from "react-native-qrcode-svg";
 import { gql, useMutation } from "@apollo/client";
 
-import { useRoomContext } from "../../hooks";
 import Desc from "./Desc";
 
 const START_ROOM = gql`
@@ -22,26 +21,55 @@ const START_VOTE = gql`
   }
 `;
 
-const RoomInfo: React.FC = () => {
+interface RoomInfoProps {
+  code: string;
+  completeCount: number;
+  durationMinute: number;
+  id: number;
+  imposterCount: number;
+  isEnded: boolean;
+  isStarted: boolean;
+  isImposter: boolean;
+  isReadyToStart: boolean;
+  maxParticipantCount: number;
+  minutePast: number;
+  participantCount: number;
+  totalTask: number;
+}
+
+const RoomInfo: React.FC<RoomInfoProps> = (props) => {
+  const {
+    code,
+    completeCount,
+    durationMinute,
+    id,
+    imposterCount,
+    isEnded,
+    isStarted,
+    isImposter,
+    isReadyToStart,
+    maxParticipantCount,
+    minutePast,
+    participantCount,
+    totalTask,
+  } = props;
   const [startRoom] = useMutation(START_ROOM);
   const [startVote] = useMutation(START_VOTE);
 
   const theme = useTheme();
   const themeColor = theme.colors.primary[500];
 
-  const room = useRoomContext();
+  // const room = useRoomContext();
 
   const onStartRoom = React.useCallback(async () => {
-    await startRoom({ variables: { roomId: room!.id } });
-  }, [room]);
+    await startRoom({ variables: { roomId: id } });
+  }, [id]);
 
   const onStartVote = React.useCallback(async () => {
-    await startVote({ variables: { roomId: room!.id } });
-  }, [room]);
+    await startVote({ variables: { roomId: id } });
+  }, [id]);
 
-  if (!room) return <></>;
-
-  const character = room.isImposter ? "Imposter" : "Crewmate";
+  const character = isImposter ? "Imposter" : "Crewmate";
 
   return (
     <>
@@ -53,20 +81,20 @@ const RoomInfo: React.FC = () => {
         backgroundColor={themeColor}
         borderBottomLeftRadius={70}
       >
-        <QRCode value={room.code} size={150} />
+        <QRCode value={code} size={150} />
       </Center>
       <Box flex={1} px={5} py={5}>
-        <Desc title="Imposter">{`${room.game.imposterCount}`}</Desc>
-        <Desc title="Participants">{`${room.participants.length}/${room.game.maxParticipantCount}`}</Desc>
-        <Desc title="Task">{`${room.completeCount}/${room.game.totalTask}`}</Desc>
-        <Desc title="Duration (Min)">{`${room.minutePast}/${room.game.durationMinute} `}</Desc>
-        {!!room.isStarted && <Desc title="Character">{character}</Desc>}
-        {!!room.isReadyToStart && !room.isStarted && (
+        <Desc title="Imposter">{`${imposterCount}`}</Desc>
+        <Desc title="Participants">{`${participantCount}/${maxParticipantCount}`}</Desc>
+        <Desc title="Task">{`${completeCount}/${totalTask}`}</Desc>
+        <Desc title="Duration (Min)">{`${minutePast}/${durationMinute} `}</Desc>
+        {!!isStarted && <Desc title="Character">{character}</Desc>}
+        {!!isReadyToStart && !isStarted && (
           <Button mt="auto" variant="solid" onPress={onStartRoom}>
             Start
           </Button>
         )}
-        {!!room.isStarted && !room.isEnded && (
+        {!!isStarted && !isEnded && (
           <Button mt="auto" variant="solid" onPress={onStartVote}>
             Vote
           </Button>
