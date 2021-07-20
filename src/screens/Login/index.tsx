@@ -18,6 +18,7 @@ import { Player } from "../../types";
 
 import OptionModal from "./OptionModal";
 import useRegister from "./useRegister";
+import { useUserContext } from "../../hooks";
 
 interface ModalState {
   fieldName: "hat" | "color";
@@ -26,14 +27,15 @@ interface ModalState {
 
 const Login: React.FC = () => {
   const { navigate } = useNavigation();
+  const user = useUserContext();
   const register = useRegister();
   const { handleBlur, handleChange, handleSubmit, setFieldValue, values } =
     useFormik({
       initialValues: {
-        id: -1,
-        name: getRandomName(),
-        color: "red",
-        hat: HATS[0].name,
+        id: user?.id ?? -1,
+        name: user?.name ?? getRandomName(),
+        color: user?.color ?? "red",
+        hat: user?.hat ?? HATS[0].name,
       },
       onSubmit: async (user: Player) => {
         await register(user);
