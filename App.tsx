@@ -4,7 +4,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 import { useRoomState, RoomContext } from "./src/hooks/useRoomContext";
 import { useUserState, UserContext } from "./src/hooks/useUserContext";
-import Navigations from "./src/navigations";
+import Screens from "./src/screens";
 import typeDefs from "./src/typeDefs";
 
 const client = new ApolloClient({
@@ -23,7 +23,7 @@ const Main = () => {
   return (
     <UserContext.Provider value={user}>
       <RoomContext.Provider value={room}>
-        <Navigations />
+        <Screens />
       </RoomContext.Provider>
     </UserContext.Provider>
   );

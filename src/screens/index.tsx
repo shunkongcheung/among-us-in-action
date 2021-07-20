@@ -3,10 +3,10 @@ import React, { memo } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Lobby from "../screens/Lobby";
-import Login from "../screens/Login";
-import EditCheckPoints from "../screens/EditCheckPoints";
-import EditGameInfo from "../screens/EditGameInfo";
+import Lobby from "./Lobby";
+import Login from "./Login";
+import EditCheckPoints from "./EditCheckPoints";
+import EditGameInfo from "./EditGameInfo";
 
 import RoomTabNavigations from "./RoomTabNavigations";
 
