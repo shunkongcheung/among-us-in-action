@@ -1,38 +1,27 @@
 import React, { memo } from "react";
-import {
-  Box,
-  Center,
-  FlatList,
-  ScrollView,
-  Spinner,
-  StatusBar,
-  useTheme,
-} from "native-base";
+import { Box, FlatList, ScrollView, StatusBar, useTheme } from "native-base";
 
-import { useRoomContext } from "../../hooks";
 import ParticipantItem from "./ParticipantItem";
+import { Player } from "../../types";
 
-const RoomParticipants: React.FC = () => {
+interface RoomParticipantsProps {
+  participants: Array<Player>;
+  survivers: Array<{ id: number }>;
+}
+
+const RoomParticipants: React.FC<RoomParticipantsProps> = ({
+  participants,
+  survivers,
+}) => {
   const theme = useTheme();
   const themeColor = theme.colors.primary[500];
 
-  const room = useRoomContext();
-
   const data = React.useMemo(() => {
-    if (!room) return [];
-    const { participants, survivers } = room;
     return participants.map((itm) => ({
       ...itm,
       isAlive: !!survivers.find((sItem) => sItem.id === itm.id),
     }));
-  }, [room]);
-
-  if (!room)
-    return (
-      <Center flex={1}>
-        <Spinner />
-      </Center>
-    );
+  }, [participants, survivers]);
 
   return (
     <>

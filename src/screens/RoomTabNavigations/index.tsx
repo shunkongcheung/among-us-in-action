@@ -54,16 +54,22 @@ function RoomTabNavigations() {
           />
         )}
       </Tab.Screen>
-      <Tab.Screen
-        name="RoomParticipants"
-        component={RoomParticipants}
-        options={{ title: "Participants" }}
-      />
+      <Tab.Screen name="RoomParticipants" options={{ title: "Participants" }}>
+        {() => (
+          <RoomParticipants
+            participants={room.participants}
+            survivers={room.survivers}
+          />
+        )}
+      </Tab.Screen>
       <Tab.Screen name="RoomInfo" options={{ title: "Info." }}>
         {() => (
           <RoomInfo
+            durationMinute={room.game.durationMinute}
+            imposterCount={room.game.imposterCount}
+            maxParticipantCount={room.game.maxParticipantCount}
+            totalTask={room.game.totalTask}
             {...room}
-            {...room.game}
             participantCount={room.participants.length}
           />
         )}
