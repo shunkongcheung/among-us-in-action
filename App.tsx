@@ -2,7 +2,6 @@ import React from "react";
 import { NativeBaseProvider, theme, extendTheme } from "native-base";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
-import { useRoomState, RoomContext } from "./src/hooks/useRoomContext";
 import { useUserState, UserContext } from "./src/hooks/useUserContext";
 import Screens from "./src/screens";
 import typeDefs from "./src/typeDefs";
@@ -16,30 +15,20 @@ const client = new ApolloClient({
   },
 });
 
-const Main = () => {
-  const user = useUserState();
-  const room = useRoomState(user.id);
-
-  return (
-    <UserContext.Provider value={user}>
-      <RoomContext.Provider value={room}>
-        <Screens />
-      </RoomContext.Provider>
-    </UserContext.Provider>
-  );
-};
-
 export default function App() {
   const newTheme = extendTheme({
     colors: {
       primary: theme.colors.indigo,
     },
   });
+  const user = useUserState();
 
   return (
     <ApolloProvider client={client}>
       <NativeBaseProvider theme={newTheme}>
-        <Main />
+        <UserContext.Provider value={user}>
+          <Screens />
+        </UserContext.Provider>
       </NativeBaseProvider>
     </ApolloProvider>
   );
