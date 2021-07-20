@@ -2,7 +2,6 @@ import React, { memo } from "react";
 import { Box, Button, Center, StatusBar, useTheme } from "native-base";
 import QRCode from "react-native-qrcode-svg";
 import { gql, useMutation } from "@apollo/client";
-import { useNavigation } from "@react-navigation/native";
 
 import { useRoomContext } from "../../hooks";
 import Desc from "./Desc";
@@ -30,17 +29,15 @@ const RoomInfo: React.FC = () => {
   const theme = useTheme();
   const themeColor = theme.colors.primary[500];
 
-  const { navigate } = useNavigation();
   const room = useRoomContext();
 
   const onStartGame = React.useCallback(async () => {
     await startGame({ variables: { roomId: room!.id } });
-    navigate("RoomMap", { isPopUp: true });
-  }, [room, navigate]);
+  }, [room]);
 
   const onStartVote = React.useCallback(async () => {
     await startVote({ variables: { roomId: room!.id } });
-  }, [room, navigate]);
+  }, [room]);
 
   if (!room) return <></>;
 
