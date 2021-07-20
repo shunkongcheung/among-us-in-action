@@ -27,9 +27,9 @@ const JoinRoomModal: React.FC<JoinRoomModalProps> = ({ open, handleClose }) => {
   } = useFormik({
     initialValues: { code: "" },
     onSubmit: async ({ code }) => {
-      await joinRoom(code);
       handleClose();
       navigate("Room", { screen: "RoomInfo" });
+      await joinRoom(code);
     },
   });
 
