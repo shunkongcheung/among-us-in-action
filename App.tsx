@@ -16,6 +16,19 @@ const client = new ApolloClient({
   },
 });
 
+const Main = () => {
+  const user = useUserState();
+  const room = useRoomState(user.id);
+
+  return (
+    <UserContext.Provider value={user}>
+      <RoomContext.Provider value={room}>
+        <Navigations />
+      </RoomContext.Provider>
+    </UserContext.Provider>
+  );
+};
+
 export default function App() {
   const newTheme = extendTheme({
     colors: {
@@ -23,17 +36,10 @@ export default function App() {
     },
   });
 
-  const user = useUserState();
-  const room = useRoomState(user.id);
-
   return (
     <ApolloProvider client={client}>
       <NativeBaseProvider theme={newTheme}>
-        <UserContext.Provider value={user}>
-          <RoomContext.Provider value={room}>
-            <Navigations />
-          </RoomContext.Provider>
-        </UserContext.Provider>
+        <Main />
       </NativeBaseProvider>
     </ApolloProvider>
   );

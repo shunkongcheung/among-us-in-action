@@ -1,7 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
+import { useRoomContext } from "../hooks";
 import RoomInfo from "../screens/RoomInfo";
 import RoomMap from "../screens/RoomMap";
 import RoomParticipants from "../screens/RoomParticipants";
@@ -30,6 +32,15 @@ const screenOptions = ({ route }: any) => {
 };
 
 function RoomTabNavigations() {
+  const room = useRoomContext();
+  const { navigate } = useNavigation();
+
+  const isStarted = room?.isStarted ?? false;
+
+  React.useEffect(() => {
+    if (isStarted) navigate("RoomMap", { isCharacterModal: true });
+  }, [isStarted]);
+
   return (
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen

@@ -1,42 +1,30 @@
+import { useRoute } from "@react-navigation/native";
 import React, { memo } from "react";
+
 import { Map } from "../../components";
 import { useRoomContext } from "../../hooks";
 
+import CharacterModal from "./CharacterModal";
+import useMap from "./useMap";
+
 const RoomMap: React.FC = () => {
   const room = useRoomContext();
+  const { params } = useRoute();
 
-  const region = React.useMemo(() => {
-    if (!room)
-      return {
-        latitude: -1,
-        longitude: -1,
-        latitudeDelta: -1,
-        longitudeDelta: -1,
-      };
-    const { game } = room;
-    return {
-      latitude: game.latitude,
-      longitude: game.longitude,
-      latitudeDelta: game.latitudeDelta,
-      longitudeDelta: game.longitudeDelta,
-    };
-  }, [room]);
-
-  const markers = React.useMemo(() => {
-    if (!room) return [];
-    return room.game.checkPoints.map((itm) => ({
-      id: itm.id,
-      coordinate: {
-        latitude: itm.latitude,
-        longitude: itm.longitude,
-      },
-    }));
-  }, [room]);
+  const [isCharacterModal, setIsCharacterModal] = React.useState(
+    (params as any).isCharacterModal || false
+  );
+  const { region, markers } = useMap(room);
 
   if (!room) return <></>;
 
   return (
     <>
+      <CharacterModal
+        isOpen={isCharacterModal}
+        isImposter={room?.isImposter || false}
+        handleClose={() => setIsCharacterModal(false)}
+      />
       <Map
         initialRegion={region}
         markers={markers}

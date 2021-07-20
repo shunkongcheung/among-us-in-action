@@ -25,10 +25,14 @@ export interface Room {
   game: Game;
   completeCount: number;
   participants: Array<Player>;
-  survivers: Array<Player>;
-  imposters: Array<Player>;
-  startAt?: Date;
-  endAt?: Date;
+  isAlive: boolean;
+  isCrewMateWin: boolean;
+  isEnded: boolean;
+  isImposter: boolean;
+  isImposterWin: boolean;
+  isReadyToStart: boolean;
+  isStarted: boolean;
+  minutePast: number;
 }
 
 export interface Player {

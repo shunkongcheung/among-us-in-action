@@ -22,6 +22,7 @@ const OptionModal: React.FC<OptionModalProps> = ({
           <HStack flexWrap="wrap">
             {options.map(({ children, value }) => (
               <TouchableOpacity
+                key={`OptionModal-Button-${value}`}
                 onPress={() => {
                   handleChange(value);
                   handleClose();

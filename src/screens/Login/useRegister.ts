@@ -29,7 +29,6 @@ function useRegister() {
 
       const playerId = id > 0 ? id : null;
 
-      console.warn("yoyo", playerId);
       const { data } = await editUser({ variables: { player, playerId } });
       const result = data!.editUser;
       setUser(result);
