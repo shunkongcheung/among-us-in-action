@@ -91,11 +91,12 @@ const ROOM_SUBSCRIPTION = gql`
   }
 `;
 
-export const useRoomState = (playerId: number, httpClient: any) => {
+export const useRoomState = (playerId: number) => {
   const [minutePast, setMinutePast] = useState(0);
+
   const { storeGame } = useLocalGames();
 
-  const [endRoom] = useMutation(END_ROOM, { client: httpClient });
+  const [endRoom] = useMutation(END_ROOM);
   const { data } = useSubscription<{ onRoomChange: RoomRet }>(
     ROOM_SUBSCRIPTION,
     {
