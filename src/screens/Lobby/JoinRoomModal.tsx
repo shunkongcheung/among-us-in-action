@@ -4,40 +4,34 @@ import { Box, Button, Input, Modal } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { gql, useMutation } from "@apollo/client";
 
-import { useUserContext } from "../../hooks";
+import { useJoin } from "../../hooks";
 
 interface JoinRoomModalProps {
   open: boolean;
   handleClose: () => any;
 }
 
-const JOIN = gql`
-  mutation Join($playerId: Float!, $code: String!) {
-    join(playerId: $playerId, code: $code) {
-      id
-    }
-  }
-`;
-
 const JoinRoomModal: React.FC<JoinRoomModalProps> = ({ open, handleClose }) => {
   const [isReady, setIsReady] = React.useState(false);
-  const { id: playerId } = useUserContext();
-  const [join] = useMutation(JOIN);
   const { navigate } = useNavigation();
+  const { joinRoom } = useJoin();
 
-  const { values, handleBlur, handleSubmit, handleChange, setFieldValue } =
-    useFormik({
-      initialValues: {
-        code: "",
-      },
-      onSubmit: async ({ code }) => {
-        await join({ variables: { playerId, code } });
-        handleClose();
-        navigate("Room", { screen: "RoomInfo" });
-      },
-    });
+  const {
+    isSubmitting,
+    values,
+    handleBlur,
+    handleSubmit,
+    handleChange,
+    setFieldValue,
+  } = useFormik({
+    initialValues: { code: "" },
+    onSubmit: async ({ code }) => {
+      await joinRoom(code);
+      handleClose();
+      navigate("Room", { screen: "RoomInfo" });
+    },
+  });
 
   const onScan = React.useCallback(
     ({ data }) => {
@@ -65,6 +59,7 @@ const JoinRoomModal: React.FC<JoinRoomModalProps> = ({ open, handleClose }) => {
             placeholder="Code"
             onBlur={handleBlur("code")}
             onChangeText={handleChange("code")}
+            isDisabled={isSubmitting}
             value={values.code}
           />
           {isReady && (
@@ -82,7 +77,13 @@ const JoinRoomModal: React.FC<JoinRoomModalProps> = ({ open, handleClose }) => {
               />
             </Box>
           )}
-          <Button variant="solid" onPress={handleSubmit as any} mt={10}>
+          <Button
+            variant="solid"
+            onPress={handleSubmit as any}
+            mt={10}
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+          >
             SUBMIT
           </Button>
         </Modal.Body>
