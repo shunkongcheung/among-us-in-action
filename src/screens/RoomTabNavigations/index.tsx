@@ -45,11 +45,15 @@ function RoomTabNavigations() {
 
   return (
     <Tab.Navigator screenOptions={screenOptions}>
-      <Tab.Screen
-        name="RoomMap"
-        component={RoomMap}
-        options={{ title: "Game" }}
-      />
+      <Tab.Screen name="RoomMap" options={{ title: "Game" }}>
+        {() => (
+          <RoomMap
+            checkPoints={room.game.checkPoints}
+            region={room.game}
+            isImposter={room.isImposter}
+          />
+        )}
+      </Tab.Screen>
       <Tab.Screen
         name="RoomParticipants"
         component={RoomParticipants}
