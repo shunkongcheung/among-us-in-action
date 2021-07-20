@@ -12,7 +12,7 @@ export const HATS = [
     name: "magician",
     source: require("../assets/hats/hat-magician.png"),
   },
-  { name: "magician", source: require("../assets/hats/hat-maxico.png") },
+  { name: "maxico", source: require("../assets/hats/hat-maxico.png") },
   { name: "pirate", source: require("../assets/hats/hat-pirate.png") },
   { name: "police", source: require("../assets/hats/hat-police.png") },
   { name: "red", source: require("../assets/hats/hat-red.png") },
