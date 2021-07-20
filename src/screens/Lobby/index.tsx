@@ -53,8 +53,8 @@ const Lobby: React.FC = () => {
               id,
               name,
               onPress: async () => {
-                await joinGame(id);
                 navigate("Room", { screen: "RoomInfo" });
+                await joinGame(id);
               },
             })),
         ]}

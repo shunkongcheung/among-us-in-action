@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useRoomContext } from "../../hooks";
+import useRoom from "./useRoom";
 import RoomInfo from "../RoomInfo";
 import RoomMap from "../RoomMap";
 import RoomParticipants from "../RoomParticipants";
@@ -32,7 +32,7 @@ const screenOptions = ({ route }: any) => {
 };
 
 function RoomTabNavigations() {
-  const room = useRoomContext();
+  const room = useRoom();
   const { navigate } = useNavigation();
 
   const isStarted = room?.isStarted ?? false;
@@ -41,23 +41,39 @@ function RoomTabNavigations() {
     if (isStarted) navigate("RoomMap", { isCharacterModal: true });
   }, [isStarted]);
 
+  if (!room) return <></>;
+
   return (
     <Tab.Navigator screenOptions={screenOptions}>
-      <Tab.Screen
-        name="RoomMap"
-        component={RoomMap}
-        options={{ title: "Game" }}
-      />
-      <Tab.Screen
-        name="RoomParticipants"
-        component={RoomParticipants}
-        options={{ title: "Participants" }}
-      />
-      <Tab.Screen
-        name="RoomInfo"
-        component={RoomInfo}
-        options={{ title: "Info." }}
-      />
+      <Tab.Screen name="RoomMap" options={{ title: "Game" }}>
+        {() => (
+          <RoomMap
+            checkPoints={room.game.checkPoints}
+            region={room.game}
+            isImposter={room.isImposter}
+          />
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="RoomParticipants" options={{ title: "Participants" }}>
+        {() => (
+          <RoomParticipants
+            participants={room.participants}
+            survivers={room.survivers}
+          />
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="RoomInfo" options={{ title: "Info." }}>
+        {() => (
+          <RoomInfo
+            durationMinute={room.game.durationMinute}
+            imposterCount={room.game.imposterCount}
+            maxParticipantCount={room.game.maxParticipantCount}
+            totalTask={room.game.totalTask}
+            {...room}
+            participantCount={room.participants.length}
+          />
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
