@@ -6,24 +6,24 @@ import { gql, useMutation } from "@apollo/client";
 import { useRoomContext } from "../../hooks";
 import Desc from "./Desc";
 
-const START_GAME = gql`
-  mutation StartGame($roomId: Float!) {
-    startGame(roomId: $roomId) {
+const START_ROOM = gql`
+  mutation StartRoom($roomId: Float!) {
+    startRoom(roomId: $roomId) {
       id
     }
   }
 `;
 
 const START_VOTE = gql`
-  mutation StartVote($roomId: Float!) {
-    startVote(roomId: $roomId) {
+  mutation StartVoteEvent($roomId: Float!) {
+    startVoteEvent(roomId: $roomId) {
       id
     }
   }
 `;
 
 const RoomInfo: React.FC = () => {
-  const [startGame] = useMutation(START_GAME);
+  const [startRoom] = useMutation(START_ROOM);
   const [startVote] = useMutation(START_VOTE);
 
   const theme = useTheme();
@@ -31,8 +31,8 @@ const RoomInfo: React.FC = () => {
 
   const room = useRoomContext();
 
-  const onStartGame = React.useCallback(async () => {
-    await startGame({ variables: { roomId: room!.id } });
+  const onStartRoom = React.useCallback(async () => {
+    await startRoom({ variables: { roomId: room!.id } });
   }, [room]);
 
   const onStartVote = React.useCallback(async () => {
@@ -61,8 +61,8 @@ const RoomInfo: React.FC = () => {
         <Desc title="Task">{`${room.completeCount}/${room.game.totalTask}`}</Desc>
         <Desc title="Duration (Min)">{`${room.minutePast}/${room.game.durationMinute} `}</Desc>
         {!!room.isStarted && <Desc title="Character">{character}</Desc>}
-        {!!room.isReadyToStart && (
-          <Button mt="auto" variant="solid" onPress={onStartGame}>
+        {!!room.isReadyToStart && !room.isStarted && (
+          <Button mt="auto" variant="solid" onPress={onStartRoom}>
             Start
           </Button>
         )}
