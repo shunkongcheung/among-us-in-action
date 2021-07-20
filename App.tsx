@@ -24,7 +24,7 @@ export default function App() {
   });
 
   const user = useUserState();
-  const room = useRoomState(user.id);
+  const room = useRoomState(user.id, client);
 
   return (
     <ApolloProvider client={client}>
