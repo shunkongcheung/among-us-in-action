@@ -1,3 +1,4 @@
+import React from "react";
 import { HStack, Text, useTheme } from "native-base";
 
 interface DescProps {
