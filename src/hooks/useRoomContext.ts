@@ -37,6 +37,7 @@ const ROOM_SUBSCRIPTION = gql`
         latitudeDelta
         longitudeDelta
         totalTask
+        imposterCount
         durationMinute
         maxParticipantCount
         checkPoints {

@@ -7,6 +7,7 @@ import {
   Box,
   StatusBar,
   ArrowForwardIcon,
+  useTheme,
 } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
@@ -19,7 +20,7 @@ interface AppBarProps {
 }
 
 const AppBar: React.FC<AppBarProps> = ({
-  bgColor = "primary.500",
+  bgColor = "",
   children,
   goNext,
   isBackable = false,
@@ -27,6 +28,9 @@ const AppBar: React.FC<AppBarProps> = ({
 }) => {
   const isNoIcon = !goNext && !isBackable;
   const { goBack } = useNavigation();
+
+  const theme = useTheme();
+  if (!bgColor) bgColor = theme.colors.primary[500];
   return (
     <>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />

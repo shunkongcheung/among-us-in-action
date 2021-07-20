@@ -23,6 +23,7 @@ export interface Room {
   id: number;
   code: string;
   game: Game;
+  completeCount: number;
   participants: Array<Player>;
   survivers: Array<Player>;
   imposters: Array<Player>;

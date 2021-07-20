@@ -74,7 +74,7 @@ const Login: React.FC = () => {
                 setModalState({
                   fieldName: "hat",
                   options: HATS.map(({ source, name }) => ({
-                    value: { source, name },
+                    value: name,
                     children: (
                       <AspectRatio ratio={1 / 1} height={5}>
                         <Image

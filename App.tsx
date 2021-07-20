@@ -11,6 +11,9 @@ const client = new ApolloClient({
   uri: "https://among-us.crestedmyna.com/graphql",
   cache: new InMemoryCache(),
   typeDefs,
+  headers: {
+    Accept: "application/json",
+  },
 });
 
 export default function App() {
