@@ -4,9 +4,9 @@ import { useCallback } from "react";
 import { useUserContext } from "../../hooks";
 import { Player } from "../../types";
 
-const REGISTER = gql`
-  mutation Register($player: PlayerInputType!) {
-    register(player: $player) {
+const EDIT_USER = gql`
+  mutation EditUser($playerId: Float, $player: PlayerInputType!) {
+    editUser(playerId: $playerId, player: $player) {
       id
       name
       hat
@@ -16,8 +16,8 @@ const REGISTER = gql`
 `;
 
 function useRegister() {
-  const { setUser } = useUserContext();
-  const [register] = useMutation<{ register: Player }>(REGISTER);
+  const { id, setUser } = useUserContext();
+  const [editUser] = useMutation<{ editUser: Player }>(EDIT_USER);
 
   const submit = useCallback(
     async (user: Player) => {
@@ -26,11 +26,15 @@ function useRegister() {
         color: user.color,
         hat: user.hat,
       };
-      const { data } = await register({ variables: { player } });
-      const result = data!.register;
+
+      const playerId = id > 0 ? id : null;
+
+      console.warn("yoyo", playerId);
+      const { data } = await editUser({ variables: { player, playerId } });
+      const result = data!.editUser;
       setUser(result);
     },
-    [setUser]
+    [id, setUser]
   );
 
   return submit;
