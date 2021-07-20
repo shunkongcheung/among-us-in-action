@@ -1,18 +1,9 @@
 import React, { memo } from "react";
-import {
-  Box,
-  VStack,
-  HStack,
-  IconButton,
-  Divider,
-  Image,
-  Text,
-} from "native-base";
+import { Box, HStack, IconButton, Divider, Image, Text } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 
 import { HATS } from "../../constants";
 import { Player } from "../../types";
-import PlayerIcon from "./PlayerIcon";
 
 interface ParticipantItemProps extends Player {
   isAlive: boolean;
