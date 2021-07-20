@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Box, Button, Center, StatusBar, useTheme } from "native-base";
+import { Box, Button, Text, StatusBar, useTheme } from "native-base";
 import QRCode from "react-native-qrcode-svg";
 import { gql, useMutation } from "@apollo/client";
 
@@ -74,15 +74,19 @@ const RoomInfo: React.FC<RoomInfoProps> = (props) => {
   return (
     <>
       <StatusBar backgroundColor={themeColor} barStyle="light-content" />
-      <Center
-        pt={5}
-        pb={10}
-        height="50%"
+      <Box
+        py="auto"
+        height="55%"
+        alignItems="center"
+        justifyContent="center"
         backgroundColor={themeColor}
         borderBottomLeftRadius={70}
       >
         <QRCode value={code} size={150} />
-      </Center>
+        <Text mt={5} fontWeight="bold" style={{ color: "#eee" }} fontSize="lg">
+          {code}
+        </Text>
+      </Box>
       <Box flex={1} px={5} py={5}>
         <Desc title="Imposter">{`${imposterCount}`}</Desc>
         <Desc title="Participants">{`${participantCount}/${maxParticipantCount}`}</Desc>
