@@ -3,11 +3,19 @@ import {
   useSubscription,
   ApolloClient,
   InMemoryCache,
+  useMutation,
 } from "@apollo/client";
-import { createContext, useContext, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { WebSocketLink } from "@apollo/client/link/ws";
 
-import { Room } from "../types";
+import { Game, Player, Room } from "../types";
 import useLocalGames from "./useLocalGames";
 
 const wsLink = new WebSocketLink({
@@ -21,6 +29,26 @@ const client = new ApolloClient({
 });
 
 export const RoomContext = createContext<Room | undefined>(undefined);
+
+interface RoomRet {
+  id: number;
+  code: string;
+  completeCount: number;
+  startAt?: string;
+  endAt?: string;
+  game: Game;
+  participants: Array<Player>;
+  imposters: Array<{ id: number }>;
+  survivers: Array<{ id: number }>;
+}
+
+const END_ROOM = gql`
+  mutation EndRoom($roomId: Float!) {
+    endRoom(roomId: $roomId) {
+      id
+    }
+  }
+`;
 
 const ROOM_SUBSCRIPTION = gql`
   subscription OnRoomChange($playerId: Float!) {
@@ -55,33 +83,110 @@ const ROOM_SUBSCRIPTION = gql`
       }
       imposters {
         id
-        name
-        color
-        hat
       }
       survivers {
         id
-        name
-        color
-        hat
       }
     }
   }
 `;
 
-export const useRoomState = (playerId: number) => {
+export const useRoomState = (playerId: number, httpClient: any) => {
+  const [minutePast, setMinutePast] = useState(0);
   const { storeGame } = useLocalGames();
-  const { data } = useSubscription<{ onRoomChange: Room }>(ROOM_SUBSCRIPTION, {
-    variables: { playerId },
-    client,
-  });
+
+  const [endRoom] = useMutation(END_ROOM, { client: httpClient });
+  const { data } = useSubscription<{ onRoomChange: RoomRet }>(
+    ROOM_SUBSCRIPTION,
+    {
+      variables: { playerId },
+      client,
+    }
+  );
   const room = data?.onRoomChange;
 
+  const getMinutePast = useCallback(() => {
+    if (!room) return 0;
+    const { startAt } = room;
+    if (!startAt) return 0;
+
+    const curr = new Date();
+
+    const difference = curr.getTime() - new Date(startAt).getTime();
+    const diffMin = Math.ceil(difference / (1000 * 60));
+    return diffMin;
+  }, [room]);
+
+  const isAlive = useMemo(() => {
+    if (!room) return false;
+    return !!room.survivers.find((itm) => itm.id === playerId);
+  }, [playerId, room]);
+
+  const isCrewMateWin = useMemo(() => {
+    if (!room) return false;
+    const { imposters } = room;
+    const { durationMinute } = room.game;
+    return !imposters.length || durationMinute < minutePast;
+  }, [minutePast, room]);
+
+  const isEnded = useMemo(() => {
+    if (!room) return false;
+    const { endAt } = room;
+    return !!endAt;
+  }, [room]);
+
+  const isImposter = useMemo(() => {
+    if (!room) return false;
+    return !!room.imposters.find((itm) => itm.id === playerId);
+  }, [playerId, room]);
+
+  const isImposterWin = useMemo(() => {
+    if (!room) return false;
+    const { survivers, imposters } = room;
+    if (!imposters.length) return false;
+    return survivers.length <= imposters.length * 2;
+  }, [room]);
+
+  const isReadyToStart = useMemo(() => {
+    if (!room) return false;
+    const { participants, game } = room;
+    return participants.length > game.imposterCount * 2;
+  }, [room]);
+
+  const isStarted = useMemo(() => {
+    if (!room) return false;
+    return !!room.startAt;
+  }, [room]);
+
   useEffect(() => {
+    // update is ended every nth second
+    const interval = setInterval(() => setMinutePast(getMinutePast()), 5000);
+    return () => clearInterval(interval);
+  }, [getMinutePast, setMinutePast]);
+
+  useEffect(() => {
+    // when game should end, call end game
+    if (isCrewMateWin) endRoom({ variables: { roomId: room!.id } });
+  }, [endRoom, isCrewMateWin]);
+
+  useEffect(() => {
+    // store this game when loaded
     if (!!room) storeGame(room.game);
   }, [room]);
 
-  return room;
+  if (!room) return undefined;
+
+  return {
+    ...room!,
+    isAlive,
+    isCrewMateWin,
+    isEnded,
+    isImposter,
+    isImposterWin,
+    isReadyToStart,
+    isStarted,
+    minutePast,
+  };
 };
 
 const useRoomContext = () => {
