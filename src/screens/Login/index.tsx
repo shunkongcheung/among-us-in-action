@@ -29,6 +29,9 @@ const Login: React.FC = () => {
   const { navigate } = useNavigation();
   const user = useUserContext();
   const register = useRegister();
+
+  console.log({ user });
+
   const { handleBlur, handleChange, handleSubmit, setFieldValue, values } =
     useFormik({
       initialValues: {
@@ -47,6 +50,16 @@ const Login: React.FC = () => {
     fieldName: "hat",
     options: [],
   });
+
+  React.useEffect(() => {
+    // user load completed
+    if (user.id !== -1) {
+      setFieldValue("id", user.id);
+      setFieldValue("name", user.name);
+      setFieldValue("color", user.color);
+      setFieldValue("hat", user.hat);
+    }
+  }, [user, setFieldValue]);
 
   return (
     <>
