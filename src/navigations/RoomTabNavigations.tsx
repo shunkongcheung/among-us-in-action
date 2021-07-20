@@ -38,7 +38,7 @@ function RoomTabNavigations() {
   const isStarted = room?.isStarted ?? false;
 
   React.useEffect(() => {
-    if (isStarted) navigate("RoomMap", { isPopUp: true });
+    if (isStarted) navigate("RoomMap", { isCharacterModal: true });
   }, [isStarted]);
 
   return (
