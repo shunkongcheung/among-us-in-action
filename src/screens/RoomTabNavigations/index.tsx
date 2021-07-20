@@ -3,10 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useRoomContext } from "../hooks";
-import RoomInfo from "../screens/RoomInfo";
-import RoomMap from "../screens/RoomMap";
-import RoomParticipants from "../screens/RoomParticipants";
+import { useRoomContext } from "../../hooks";
+import RoomInfo from "../RoomInfo";
+import RoomMap from "../RoomMap";
+import RoomParticipants from "../RoomParticipants";
 
 const Tab = createBottomTabNavigator();
 
