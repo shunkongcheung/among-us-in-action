@@ -5,18 +5,11 @@ import {
   InMemoryCache,
   useMutation,
 } from "@apollo/client";
-import {
-  createContext,
-  useContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { WebSocketLink } from "@apollo/client/link/ws";
 
-import { Game, Player, Room } from "../types";
-import useLocalGames from "./useLocalGames";
+import { useLocalGames, useUserContext } from "../../hooks";
+import { Game, Player, Room } from "../../types";
 
 const wsLink = new WebSocketLink({
   uri: "wss://among-us.crestedmyna.com/subscriptions",
@@ -27,8 +20,6 @@ const client = new ApolloClient({
   link: wsLink,
   cache: new InMemoryCache(),
 });
-
-export const RoomContext = createContext<Room | undefined>(undefined);
 
 interface RoomRet {
   id: number;
@@ -91,7 +82,8 @@ const ROOM_SUBSCRIPTION = gql`
   }
 `;
 
-export const useRoomState = (playerId: number) => {
+const useRoom = (): Room | undefined => {
+  const { id: playerId } = useUserContext();
   const [minutePast, setMinutePast] = useState(0);
 
   const { storeGame } = useLocalGames();
@@ -191,9 +183,4 @@ export const useRoomState = (playerId: number) => {
   };
 };
 
-const useRoomContext = () => {
-  const room = useContext(RoomContext);
-  return room;
-};
-
-export default useRoomContext;
+export default useRoom;

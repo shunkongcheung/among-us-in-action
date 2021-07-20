@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useRoomContext } from "../../hooks";
+import useRoom from "./useRoom";
 import RoomInfo from "../RoomInfo";
 import RoomMap from "../RoomMap";
 import RoomParticipants from "../RoomParticipants";
@@ -32,7 +32,7 @@ const screenOptions = ({ route }: any) => {
 };
 
 function RoomTabNavigations() {
-  const room = useRoomContext();
+  const room = useRoom();
   const { navigate } = useNavigation();
 
   const isStarted = room?.isStarted ?? false;
