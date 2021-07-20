@@ -112,8 +112,9 @@ export const useRoomState = (playerId: number) => {
     if (!startAt) return 0;
 
     const curr = new Date();
+    const startAtTime = new Date(startAt);
 
-    const difference = curr.getTime() - new Date(startAt).getTime();
+    const difference = curr.getTime() - startAtTime.getTime();
     const diffMin = Math.ceil(difference / (1000 * 60));
     return diffMin;
   }, [room]);
