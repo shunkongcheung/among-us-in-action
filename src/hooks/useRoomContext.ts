@@ -4,10 +4,11 @@ import {
   ApolloClient,
   InMemoryCache,
 } from "@apollo/client";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { WebSocketLink } from "@apollo/client/link/ws";
 
 import { Room } from "../types";
+import useLocalGames from "./useLocalGames";
 
 const wsLink = new WebSocketLink({
   uri: "wss://among-us.crestedmyna.com/subscriptions",
@@ -69,12 +70,18 @@ const ROOM_SUBSCRIPTION = gql`
 `;
 
 export const useRoomState = (playerId: number) => {
+  const { storeGame } = useLocalGames();
   const { data } = useSubscription<{ onRoomChange: Room }>(ROOM_SUBSCRIPTION, {
     variables: { playerId },
     client,
   });
+  const room = data?.onRoomChange;
 
-  return data?.onRoomChange;
+  useEffect(() => {
+    if (!!room) storeGame(room.game);
+  }, [room]);
+
+  return room;
 };
 
 const useRoomContext = () => {
