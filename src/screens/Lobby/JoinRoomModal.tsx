@@ -1,6 +1,10 @@
 import React, { memo } from "react";
-import { Button, Input, Modal } from "native-base";
+import { StyleSheet } from "react-native";
+import { Box, Button, Input, Modal } from "native-base";
+import { useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import { gql, useMutation } from "@apollo/client";
 
 import { useUserContext } from "../../hooks";
 
@@ -9,16 +13,46 @@ interface JoinRoomModalProps {
   handleClose: () => any;
 }
 
+const JOIN = gql`
+  mutation Join($playerId: Float!, $code: String!) {
+    join(playerId: $playerId, code: $code) {
+      id
+    }
+  }
+`;
+
 const JoinRoomModal: React.FC<JoinRoomModalProps> = ({ open, handleClose }) => {
+  const [isReady, setIsReady] = React.useState(false);
   const { id: playerId } = useUserContext();
-  const { values, handleBlur, handleSubmit, handleChange } = useFormik({
-    initialValues: {
-      code: "",
+  const [join] = useMutation(JOIN);
+  const { navigate } = useNavigation();
+
+  const { values, handleBlur, handleSubmit, handleChange, setFieldValue } =
+    useFormik({
+      initialValues: {
+        code: "",
+      },
+      onSubmit: async ({ code }) => {
+        await join({ variables: { playerId, code } });
+        handleClose();
+        navigate("Room", { screen: "RoomInfo" });
+      },
+    });
+
+  const onScan = React.useCallback(
+    ({ data }) => {
+      setFieldValue("code", data);
+      handleSubmit();
     },
-    onSubmit: ({ code }) => {
-      const payload = { code, playerId };
-    },
-  });
+    [setFieldValue, handleSubmit]
+  );
+
+  React.useEffect(() => {
+    (async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setIsReady(status === "granted");
+    })();
+  }, [setIsReady]);
 
   return (
     <Modal isOpen={open} onClose={handleClose}>
@@ -33,6 +67,21 @@ const JoinRoomModal: React.FC<JoinRoomModalProps> = ({ open, handleClose }) => {
             onChangeText={handleChange("code")}
             value={values.code}
           />
+          {isReady && (
+            <Box
+              flex={1}
+              maxHeight="80%"
+              width={250}
+              height={250}
+              mt={5}
+              mx="auto"
+            >
+              <BarCodeScanner
+                onBarCodeScanned={onScan}
+                style={StyleSheet.absoluteFillObject}
+              />
+            </Box>
+          )}
           <Button variant="solid" onPress={handleSubmit as any} mt={10}>
             SUBMIT
           </Button>
