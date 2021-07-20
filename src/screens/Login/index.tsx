@@ -32,10 +32,10 @@ const Login: React.FC = () => {
   const { handleBlur, handleChange, handleSubmit, setFieldValue, values } =
     useFormik({
       initialValues: {
-        id: user?.id ?? -1,
-        name: user?.name ?? getRandomName(),
-        color: user?.color ?? "red",
-        hat: user?.hat ?? HATS[0].name,
+        id: user?.id || -1,
+        name: user?.name || getRandomName(),
+        color: user?.color || "red",
+        hat: user?.hat || HATS[0].name,
       },
       onSubmit: async (user: Player) => {
         await register(user);
