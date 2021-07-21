@@ -9,6 +9,7 @@ import useRoom from "./useRoom";
 import RoomInfo from "../RoomInfo";
 import RoomMap from "../RoomMap";
 import RoomParticipants from "../RoomParticipants";
+import useVoteEvent from "./useVoteEvent";
 
 const wsLink = new WebSocketLink({
   uri: "wss://among-us.crestedmyna.com/subscriptions",
@@ -45,6 +46,7 @@ const screenOptions = ({ route }: any) => {
 
 function RoomTabNavigations() {
   const room = useRoom(client);
+  const voteEvent = useVoteEvent(client);
   const { navigate } = useNavigation();
 
   const isStarted = room?.isStarted ?? false;
@@ -52,6 +54,11 @@ function RoomTabNavigations() {
   React.useEffect(() => {
     if (isStarted) navigate("RoomMap", { isCharacterModal: true });
   }, [isStarted]);
+
+  React.useEffect(() => {
+    // on vote event id changes
+    if (!!voteEvent?.id) navigate("RoomParticipants");
+  }, [voteEvent?.id]);
 
   if (!room) return <></>;
 
@@ -71,6 +78,8 @@ function RoomTabNavigations() {
           <RoomParticipants
             participants={room.participants}
             survivers={room.survivers}
+            voteEventId={voteEvent?.id}
+            votes={voteEvent?.votes || []}
           />
         )}
       </Tab.Screen>
