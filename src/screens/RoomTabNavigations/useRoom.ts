@@ -151,8 +151,9 @@ const useRoom = (
 
   useEffect(() => {
     // when game should end, call end game
-    if (isCrewMateWin) endRoom({ variables: { roomId: room!.id } });
-  }, [endRoom, isCrewMateWin]);
+    if (isStarted && isCrewMateWin)
+      endRoom({ variables: { roomId: room!.id } });
+  }, [endRoom, isCrewMateWin, isStarted]);
 
   useEffect(() => {
     // store this game when loaded
