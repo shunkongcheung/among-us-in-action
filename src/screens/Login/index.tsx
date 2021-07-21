@@ -11,7 +11,7 @@ import {
   Input,
 } from "native-base";
 
-import { AppBar } from "../../components";
+import { AppBar, PlayerIcon } from "../../components";
 import { HATS, COLORS } from "../../constants";
 import { getRandomName } from "../../utils";
 
@@ -72,6 +72,7 @@ const Login: React.FC = () => {
       />
       <AppBar>Among Us</AppBar>
       <Box flex={1} mx={3} my={5} px={2} pb={10}>
+        <PlayerIcon color={values.color} hat={values.hat} size="sm" />
         <Box my="auto" height="50%" justifyContent="space-between">
           <FormControl>
             <FormControl.Label>Display name</FormControl.Label>
