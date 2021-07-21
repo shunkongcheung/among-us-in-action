@@ -30,8 +30,6 @@ const Login: React.FC = () => {
   const user = useUserContext();
   const register = useRegister();
 
-  console.log({ user });
-
   const { handleBlur, handleChange, handleSubmit, setFieldValue, values } =
     useFormik({
       initialValues: {
@@ -88,7 +86,9 @@ const Login: React.FC = () => {
               onPress={() =>
                 setModalState({
                   fieldName: "hat",
-                  options: HATS.map(({ source, name }) => ({
+                  options: HATS.filter(
+                    (itm) => itm.name !== "question-mark"
+                  ).map(({ source, name }) => ({
                     value: name,
                     children: (
                       <AspectRatio ratio={1 / 1} height={5}>

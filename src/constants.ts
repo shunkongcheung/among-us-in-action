@@ -19,6 +19,10 @@ export const HATS = [
   { name: "winter", source: require("../assets/hats/hat-winter.png") },
   { name: "witch", source: require("../assets/hats/hat-witch.png") },
   { name: "worker", source: require("../assets/hats/hat-worker.png") },
+  {
+    name: "question-mark",
+    source: require("../assets/hats/hat-question-mark.png"),
+  },
 ];
 
 export const COLORS = [

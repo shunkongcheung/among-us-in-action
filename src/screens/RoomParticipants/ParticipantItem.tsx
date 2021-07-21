@@ -1,5 +1,13 @@
 import React, { memo } from "react";
-import { Box, HStack, IconButton, Divider, Image, Text } from "native-base";
+import {
+  Box,
+  HStack,
+  IconButton,
+  Divider,
+  Image,
+  Text,
+  VStack,
+} from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 
 import { HATS } from "../../constants";
@@ -7,6 +15,10 @@ import { Player } from "../../types";
 
 interface ParticipantItemProps extends Player {
   isAlive: boolean;
+  isThinking: boolean;
+  isVoting: boolean;
+  isVoted: boolean;
+  onVote: () => any;
 }
 
 const ParticipantItem: React.FC<ParticipantItemProps> = ({
@@ -14,20 +26,21 @@ const ParticipantItem: React.FC<ParticipantItemProps> = ({
   hat,
   color,
   isAlive,
+  isVoting,
+  isVoted,
+  isThinking,
+  onVote,
 }) => {
   const hatSource = React.useMemo(
     () => HATS.find((itm) => itm.name === hat)!.source,
     [hat]
   );
 
-  const iconName = React.useMemo(() => {
-    if (isAlive) return "hand-right-outline"; // for vote
-    return "skull-outline";
-  }, []);
+  const isGiveUp = hat === "question-mark";
 
   return (
     <>
-      <HStack py={3} px={5} alignItems="center">
+      <HStack py={3} px={5}>
         <Box mt={10}>
           <Box position="absolute" left="25%" top="-45%" zIndex={1}>
             <Image source={hatSource} alt={`Hat of ${name}`} size="xs" />
@@ -38,13 +51,31 @@ const ParticipantItem: React.FC<ParticipantItemProps> = ({
             alt={`Player of ${name}`}
           />
         </Box>
-        <Text fontWeight="bold" mr="auto" ml={2} style={{ color }}>
-          {name}
-        </Text>
-        <IconButton
-          icon={<Ionicons name={iconName} size={30} />}
-          disabled={!isAlive}
-        />
+        <VStack justifyContent="space-evenly" mr="auto" ml={2}>
+          <Text fontWeight="bold" style={{ color }}>
+            {name}
+          </Text>
+          {isVoting && !isGiveUp && (
+            <Ionicons
+              size={30}
+              name={
+                isThinking ? "chatbubble-ellipses-outline" : "archive-outline"
+              }
+            />
+          )}
+        </VStack>
+        {!isAlive && (
+          <Box justifyContent="center" mr={1}>
+            <Ionicons name="skull-outline" size={30} />
+          </Box>
+        )}
+        {!!isVoting && isAlive && (
+          <IconButton
+            icon={<Ionicons name="hand-right-outline" size={30} />}
+            disabled={isVoted}
+            onPress={onVote}
+          />
+        )}
       </HStack>
       <Divider />
     </>

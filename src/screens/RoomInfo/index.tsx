@@ -4,6 +4,7 @@ import QRCode from "react-native-qrcode-svg";
 import { gql, useMutation } from "@apollo/client";
 
 import Desc from "./Desc";
+import ResultModal from "./ResultModal";
 
 const START_ROOM = gql`
   mutation StartRoom($roomId: Float!) {
@@ -30,6 +31,7 @@ interface RoomInfoProps {
   isEnded: boolean;
   isStarted: boolean;
   isImposter: boolean;
+  isImposterWin: boolean;
   isReadyToStart: boolean;
   maxParticipantCount: number;
   minutePast: number;
@@ -47,6 +49,7 @@ const RoomInfo: React.FC<RoomInfoProps> = (props) => {
     isEnded,
     isStarted,
     isImposter,
+    isImposterWin,
     isReadyToStart,
     maxParticipantCount,
     minutePast,
@@ -58,8 +61,6 @@ const RoomInfo: React.FC<RoomInfoProps> = (props) => {
 
   const theme = useTheme();
   const themeColor = theme.colors.primary[500];
-
-  // const room = useRoomContext();
 
   const onStartRoom = React.useCallback(async () => {
     await startRoom({ variables: { roomId: id } });
@@ -73,6 +74,11 @@ const RoomInfo: React.FC<RoomInfoProps> = (props) => {
 
   return (
     <>
+      <ResultModal
+        isImposter={isImposter}
+        isImposterWin={isImposterWin}
+        isOpen={isEnded}
+      />
       <StatusBar backgroundColor={themeColor} barStyle="light-content" />
       <Box
         py="auto"

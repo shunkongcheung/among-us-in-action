@@ -1,25 +1,14 @@
 import {
   gql,
   useSubscription,
-  ApolloClient,
-  InMemoryCache,
   useMutation,
+  ApolloClient,
+  NormalizedCacheObject,
 } from "@apollo/client";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { WebSocketLink } from "@apollo/client/link/ws";
 
 import { useLocalGames, useUserContext } from "../../hooks";
 import { Game, Player, Room } from "../../types";
-
-const wsLink = new WebSocketLink({
-  uri: "wss://among-us.crestedmyna.com/subscriptions",
-  options: { reconnect: true },
-});
-
-const client = new ApolloClient({
-  link: wsLink,
-  cache: new InMemoryCache(),
-});
 
 interface RoomRet {
   id: number;
@@ -31,6 +20,7 @@ interface RoomRet {
   participants: Array<Player>;
   imposters: Array<{ id: number }>;
   survivers: Array<{ id: number }>;
+  startImposters: Array<{ id: number }>;
 }
 
 const END_ROOM = gql`
@@ -82,9 +72,14 @@ const ROOM_SUBSCRIPTION = gql`
   }
 `;
 
-const useRoom = (): Room | undefined => {
+const useRoom = (
+  client: ApolloClient<NormalizedCacheObject>
+): Room | undefined => {
   const { id: playerId } = useUserContext();
   const [minutePast, setMinutePast] = useState(0);
+  const [startImposters, setStartImposters] = useState<Array<{ id: number }>>(
+    []
+  );
 
   const { storeGame } = useLocalGames();
 
@@ -130,9 +125,8 @@ const useRoom = (): Room | undefined => {
   }, [room]);
 
   const isImposter = useMemo(() => {
-    if (!room) return false;
-    return !!room.imposters.find((itm) => itm.id === playerId);
-  }, [playerId, room]);
+    return !!startImposters.find((itm) => itm.id === playerId);
+  }, [playerId, startImposters]);
 
   const isImposterWin = useMemo(() => {
     if (!room) return false;
@@ -160,15 +154,23 @@ const useRoom = (): Room | undefined => {
 
   useEffect(() => {
     // when game should end, call end game
-    if (isCrewMateWin) endRoom({ variables: { roomId: room!.id } });
-  }, [endRoom, isCrewMateWin]);
+    if (isStarted && isCrewMateWin)
+      endRoom({ variables: { roomId: room!.id } });
+  }, [endRoom, isCrewMateWin, isStarted]);
 
   useEffect(() => {
     // store this game when loaded
     if (!!room) storeGame(room.game);
   }, [room]);
 
+  useEffect(() => {
+    // store starting imposters
+    if (!!room) setStartImposters((o) => (o.length ? o : [...room.imposters]));
+  }, [room?.imposters]);
+
   if (!room) return undefined;
+
+  console.warn({ startImposters });
 
   return {
     ...room!,
@@ -180,6 +182,7 @@ const useRoom = (): Room | undefined => {
     isReadyToStart,
     isStarted,
     minutePast,
+    startImposters,
   };
 };
 

@@ -26,6 +26,7 @@ export interface Room {
   completeCount: number;
   participants: Array<Player>;
   survivers: Array<{ id: number }>;
+  imposters: Array<{ id: number }>;
   isAlive: boolean;
   isCrewMateWin: boolean;
   isEnded: boolean;
