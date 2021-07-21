@@ -1,8 +1,16 @@
 import React, { memo } from "react";
-import { Image, Modal, PresenceTransition, Text } from "native-base";
+import { Modal, PresenceTransition, Text } from "native-base";
+
+import { PlayerIcon } from "../../components";
+
+interface Player {
+  name: string;
+  color: string;
+  hat: string;
+}
 
 interface VoteResultModalProps {
-  voteOutPlayer?: { name: string };
+  voteOutPlayer?: Player;
   isImposter: boolean;
   handleClose: () => any;
 }
@@ -42,11 +50,11 @@ const VoteResultModal: React.FC<VoteResultModalProps> = ({
             </Text>
           </PresenceTransition>
         </Modal.Header>
-        <Modal.Body alignItems="center">
-          <Image
-            source={require("../../../assets/chacter-modal.png")}
-            alt="Character Modal Image"
-            size={"2xl"}
+        <Modal.Body alignItems="center" mt={10}>
+          <PlayerIcon
+            size="lg"
+            color={voteOutPlayer?.color || "red"}
+            hat={voteOutPlayer?.hat || "magician"}
           />
         </Modal.Body>
       </Modal.Content>
