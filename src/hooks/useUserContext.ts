@@ -9,18 +9,22 @@ import { Alert } from "react-native";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Player } from "../types";
 import { getCurrentLocation } from "../utils";
 
-interface User {
+interface UserInput {
   id: number;
   name: string;
   hat: string;
   color: string;
 }
 
-interface UserContextState extends Player {
-  setUser: (user: Player) => any;
+interface User extends UserInput {
+  latitude: number;
+  longitude: number;
+}
+
+interface UserContextState extends User {
+  setUser: (user: User) => any;
 }
 
 export const UserContext = createContext<UserContextState>({
@@ -36,7 +40,7 @@ export const UserContext = createContext<UserContextState>({
 const STORAGE_KEY = "@USER";
 
 export const useUserState = (): UserContextState => {
-  const [user, setUserLocal] = useState<Player>({
+  const [user, setUserLocal] = useState<User>({
     id: -1,
     name: "",
     color: "",
@@ -46,7 +50,7 @@ export const useUserState = (): UserContextState => {
   });
 
   const setUser = useCallback(
-    async (user: User) => {
+    async (user: UserInput) => {
       setUserLocal((o) => ({
         ...user,
         latitude: o.latitude,
