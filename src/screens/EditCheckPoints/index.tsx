@@ -4,7 +4,7 @@ import uuid from "react-native-uuid";
 
 import { AppBar, Map } from "../../components";
 import { Location } from "../../components/Map";
-import { Task } from "../../types";
+import { Task } from "../../constants";
 import useSubmit from "./useSubmit";
 
 interface CheckPoint {
