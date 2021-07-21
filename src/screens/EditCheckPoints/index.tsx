@@ -55,7 +55,7 @@ const EditCheckPoints: React.FC = () => {
     (location: Location) =>
       setMarkers((o) => ({
         ...o,
-        [uuid.v4() as string]: { id: -1, ...location, task: getRandomTask() },
+        [uuid.v4() as string]: { ...location, task: getRandomTask() },
       })),
     [setMarkers]
   );
