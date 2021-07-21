@@ -19,7 +19,7 @@ interface Game {
   checkPoints: Array<CheckPoint>;
 }
 
-export interface Room {
+interface Room {
   id: number;
   code: string;
   game: Game;

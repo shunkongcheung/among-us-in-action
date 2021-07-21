@@ -8,7 +8,58 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useLocalGames, useUserContext } from "../../hooks";
-import { Room } from "../../types";
+import { Task } from "../../types";
+
+interface Participant {
+  id: number;
+  name: string;
+  color: string;
+  hat: string;
+}
+
+interface SimplePlayer {
+  id: number;
+}
+
+interface CheckPoint {
+  id: number;
+  latitude: number;
+  longitude: number;
+  task: Task;
+}
+
+interface Game {
+  id: number;
+  name: string;
+  maxParticipantCount: number;
+  totalTask: number;
+  durationMinute: number;
+  imposterCount: number;
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+  checkPoints: Array<CheckPoint>;
+}
+
+interface Room {
+  id: number;
+  code: string;
+  game: Game;
+  completeCount: number;
+  participants: Array<Participant>;
+  survivers: Array<SimplePlayer>;
+  imposters: Array<SimplePlayer>;
+  startImposters: Array<SimplePlayer>;
+  isAlive: boolean;
+  isCrewMateWin: boolean;
+  isEnded: boolean;
+  isImposter: boolean;
+  isImposterWin: boolean;
+  isReadyToStart: boolean;
+  isStarted: boolean;
+  minutePast: number;
+}
 
 interface RoomRet extends Room {
   startAt?: string;
@@ -71,9 +122,7 @@ const useRoom = (
 ): Room | undefined => {
   const { id: playerId } = useUserContext();
   const [minutePast, setMinutePast] = useState(0);
-  const [startImposters, setStartImposters] = useState<Array<{ id: number }>>(
-    []
-  );
+  const [startImposters, setStartImposters] = useState<Array<SimplePlayer>>([]);
 
   const { storeGame } = useLocalGames();
 
