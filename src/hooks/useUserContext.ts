@@ -24,7 +24,7 @@ interface User extends UserInput {
 }
 
 interface UserContextState extends User {
-  setUser: (user: User) => any;
+  setUser: (user: UserInput) => any;
 }
 
 export const UserContext = createContext<UserContextState>({

@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { gql, useMutation } from "@apollo/client";
 
+import { Task } from "../../constants";
 import { useJoin } from "../../hooks";
-import { Task } from "../../types";
 
 interface CreateGame {
   createGame: { id: number };

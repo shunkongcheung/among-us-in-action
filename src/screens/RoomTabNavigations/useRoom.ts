@@ -7,8 +7,8 @@ import {
 } from "@apollo/client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { Task } from "../../constants";
 import { useLocalGames, useUserContext } from "../../hooks";
-import { Task } from "../../types";
 
 interface Participant {
   id: number;
