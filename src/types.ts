@@ -27,6 +27,7 @@ export interface Room {
   participants: Array<Player>;
   survivers: Array<{ id: number }>;
   imposters: Array<{ id: number }>;
+  startImposters: Array<{ id: number }>;
   isAlive: boolean;
   isCrewMateWin: boolean;
   isEnded: boolean;

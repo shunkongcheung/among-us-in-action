@@ -8,19 +8,11 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useLocalGames, useUserContext } from "../../hooks";
-import { Game, Player, Room } from "../../types";
+import { Room } from "../../types";
 
-interface RoomRet {
-  id: number;
-  code: string;
-  completeCount: number;
+interface RoomRet extends Room {
   startAt?: string;
   endAt?: string;
-  game: Game;
-  participants: Array<Player>;
-  imposters: Array<{ id: number }>;
-  survivers: Array<{ id: number }>;
-  startImposters: Array<{ id: number }>;
 }
 
 const END_ROOM = gql`
@@ -169,8 +161,6 @@ const useRoom = (
   }, [room?.imposters]);
 
   if (!room) return undefined;
-
-  console.warn({ startImposters });
 
   return {
     ...room!,

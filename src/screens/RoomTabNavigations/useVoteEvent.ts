@@ -7,7 +7,6 @@ import {
 } from "@apollo/client";
 
 import { useUserContext } from "../../hooks";
-import { Player } from "../../types";
 
 const VOTE_SUBSCRIPTION = gql`
   subscription OnVoteEvent($playerId: Float!) {
@@ -29,9 +28,13 @@ const VOTE_SUBSCRIPTION = gql`
   }
 `;
 
+interface Votee {
+  id: number;
+}
+
 interface Vote {
-  voteFor?: Player;
-  voteBy: Player;
+  voteFor?: Votee;
+  voteBy: Votee;
 }
 
 interface VoteEvent {

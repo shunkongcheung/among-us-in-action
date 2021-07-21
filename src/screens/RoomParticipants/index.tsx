@@ -4,7 +4,6 @@ import { Box, FlatList, ScrollView, StatusBar, useTheme } from "native-base";
 
 import ParticipantItem from "./ParticipantItem";
 import { AppBar } from "../../components";
-import { Player } from "../../types";
 import { useUserContext } from "../../hooks";
 
 interface Vote {
@@ -12,8 +11,15 @@ interface Vote {
   voteBy: number;
 }
 
+interface Participant {
+  id: number;
+  name: string;
+  color: string;
+  hat: string;
+}
+
 interface RoomParticipantsProps {
-  participants: Array<Player>;
+  participants: Array<Participant>;
   survivers: Array<{ id: number }>;
   voteEventId?: number;
   votes: Array<Vote>;
@@ -43,8 +49,6 @@ const RoomParticipants: React.FC<RoomParticipantsProps> = ({
   const [vote] = useMutation(VOTE);
 
   const isVoting = !!voteEventId;
-
-  console.log({ survivers });
 
   const data = React.useMemo(() => {
     const regulars = participants.map((itm) => ({

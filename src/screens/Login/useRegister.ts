@@ -2,7 +2,16 @@ import { gql, useMutation } from "@apollo/client";
 import { useCallback } from "react";
 
 import { useUserContext } from "../../hooks";
-import { Player } from "../../types";
+
+interface UserPayload {
+  name: string;
+  hat: string;
+  color: string;
+}
+
+interface UserRet extends UserPayload {
+  id: number;
+}
 
 const EDIT_USER = gql`
   mutation EditUser($playerId: Float, $player: PlayerInputType!) {
@@ -17,16 +26,10 @@ const EDIT_USER = gql`
 
 function useRegister() {
   const { id, setUser } = useUserContext();
-  const [editUser] = useMutation<{ editUser: Player }>(EDIT_USER);
+  const [editUser] = useMutation<{ editUser: UserRet }>(EDIT_USER);
 
   const submit = useCallback(
-    async (user: Player) => {
-      const player = {
-        name: user.name,
-        color: user.color,
-        hat: user.hat,
-      };
-
+    async (player: UserPayload) => {
       const playerId = id > 0 ? id : null;
 
       const { data } = await editUser({ variables: { player, playerId } });

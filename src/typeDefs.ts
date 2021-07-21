@@ -38,6 +38,17 @@ const typeDefs = gql`
   type Player {
     id: Float!
     name: String!
+    hat: String!
+    color: String!
+    latitude: Float!
+    longitude: Float!
+  }
+
+  type Corpse {
+    id: Float!
+    player: Player!
+    latitude: Float!
+    longitude: Float!
   }
 
   input PlayerInputType {
@@ -53,6 +64,7 @@ const typeDefs = gql`
     participants: [Player!]!
     imposters: [Player!]!
     survivers: [Player!]!
+    corpses: [Corpse!]!
     completeCount: Int!
     startAt: DateTime
     endAt: DateTime
