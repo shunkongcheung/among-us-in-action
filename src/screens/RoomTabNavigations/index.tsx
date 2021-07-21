@@ -89,7 +89,9 @@ function RoomTabNavigations() {
         <Tab.Screen name="RoomMap" options={{ title: "Game" }}>
           {() => (
             <RoomMap
+              roomId={room.id}
               checkPoints={room.game.checkPoints}
+              survivers={room.survivers}
               region={{
                 latitude: room.game.latitude,
                 longitude: room.game.longitude,
