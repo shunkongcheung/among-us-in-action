@@ -21,7 +21,7 @@ export default function App() {
       primary: theme.colors.indigo,
     },
   });
-  const user = useUserState();
+  const user = useUserState(client);
 
   return (
     <ApolloProvider client={client}>
