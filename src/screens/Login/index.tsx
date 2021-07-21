@@ -30,8 +30,6 @@ const Login: React.FC = () => {
   const user = useUserContext();
   const register = useRegister();
 
-  console.log({ user });
-
   const { handleBlur, handleChange, handleSubmit, setFieldValue, values } =
     useFormik({
       initialValues: {
