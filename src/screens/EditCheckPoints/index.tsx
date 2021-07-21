@@ -3,7 +3,6 @@ import React, { memo } from "react";
 import uuid from "react-native-uuid";
 
 import { AppBar, Map } from "../../components";
-import { Location } from "../../components/Map";
 import { Task } from "../../constants";
 import useSubmit from "./useSubmit";
 
@@ -19,6 +18,11 @@ interface FormInfo {
   totalTask: number;
   durationMinute: number;
   imposterCount: number;
+}
+
+interface Location {
+  latitude: number;
+  longitude: number;
 }
 
 interface Markers {

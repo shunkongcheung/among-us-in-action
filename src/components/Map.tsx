@@ -4,17 +4,15 @@ import { watchHeadingAsync } from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import { useUserContext } from "../hooks";
 
-export interface Location {
+interface Location {
   latitude: number;
   longitude: number;
 }
 
-export interface Delta {
+interface Region extends Location {
   latitudeDelta: number;
   longitudeDelta: number;
 }
-
-export type Region = Location & Delta;
 
 type RegionCallback = (o: Region) => any;
 
