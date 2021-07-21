@@ -20,6 +20,7 @@ interface RoomRet {
   participants: Array<Player>;
   imposters: Array<{ id: number }>;
   survivers: Array<{ id: number }>;
+  startImposters: Array<{ id: number }>;
 }
 
 const END_ROOM = gql`
@@ -76,6 +77,9 @@ const useRoom = (
 ): Room | undefined => {
   const { id: playerId } = useUserContext();
   const [minutePast, setMinutePast] = useState(0);
+  const [startImposters, setStartImposters] = useState<Array<{ id: number }>>(
+    []
+  );
 
   const { storeGame } = useLocalGames();
 
@@ -121,9 +125,8 @@ const useRoom = (
   }, [room]);
 
   const isImposter = useMemo(() => {
-    if (!room) return false;
-    return !!room.imposters.find((itm) => itm.id === playerId);
-  }, [playerId, room]);
+    return !!startImposters.find((itm) => itm.id === playerId);
+  }, [playerId, startImposters]);
 
   const isImposterWin = useMemo(() => {
     if (!room) return false;
@@ -160,7 +163,14 @@ const useRoom = (
     if (!!room) storeGame(room.game);
   }, [room]);
 
+  useEffect(() => {
+    // store starting imposters
+    if (!!room) setStartImposters((o) => (o.length ? o : [...room.imposters]));
+  }, [room?.imposters]);
+
   if (!room) return undefined;
+
+  console.warn({ startImposters });
 
   return {
     ...room!,
@@ -172,6 +182,7 @@ const useRoom = (
     isReadyToStart,
     isStarted,
     minutePast,
+    startImposters,
   };
 };
 

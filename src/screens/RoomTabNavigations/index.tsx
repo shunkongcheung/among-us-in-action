@@ -10,6 +10,7 @@ import RoomInfo from "../RoomInfo";
 import RoomMap from "../RoomMap";
 import RoomParticipants from "../RoomParticipants";
 import useVoteEvent from "./useVoteEvent";
+import VoteResultModal from "./VoteResultModal";
 
 const wsLink = new WebSocketLink({
   uri: "wss://among-us.crestedmyna.com/subscriptions",
@@ -60,42 +61,65 @@ function RoomTabNavigations() {
     if (!!voteEvent?.id) navigate("RoomParticipants");
   }, [voteEvent?.id]);
 
+  React.useEffect(() => {
+    // when game is done, and vote result is closed
+    if (room?.isEnded && !voteEvent?.id) navigate("RoomInfo");
+  }, [room?.isEnded, voteEvent?.id]);
+
+  const voteOutPlayer = React.useMemo(() => {
+    const voteOutPlayerId = voteEvent?.voteOutPlayer;
+    if (!voteOutPlayerId) return undefined;
+    return (room?.participants || []).find((itm) => itm.id === voteOutPlayerId);
+  }, [voteEvent?.voteOutPlayer, room?.participants]);
+
   if (!room) return <></>;
 
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
-      <Tab.Screen name="RoomMap" options={{ title: "Game" }}>
-        {() => (
-          <RoomMap
-            checkPoints={room.game.checkPoints}
-            region={room.game}
-            isImposter={room.isImposter}
-          />
-        )}
-      </Tab.Screen>
-      <Tab.Screen name="RoomParticipants" options={{ title: "Participants" }}>
-        {() => (
-          <RoomParticipants
-            participants={room.participants}
-            survivers={room.survivers}
-            voteEventId={voteEvent?.id}
-            votes={voteEvent?.votes || []}
-          />
-        )}
-      </Tab.Screen>
-      <Tab.Screen name="RoomInfo" options={{ title: "Info." }}>
-        {() => (
-          <RoomInfo
-            durationMinute={room.game.durationMinute}
-            imposterCount={room.game.imposterCount}
-            maxParticipantCount={room.game.maxParticipantCount}
-            totalTask={room.game.totalTask}
-            {...room}
-            participantCount={room.participants.length}
-          />
-        )}
-      </Tab.Screen>
-    </Tab.Navigator>
+    <>
+      <VoteResultModal
+        voteOutPlayer={voteOutPlayer}
+        isImposter={
+          !!(room?.startImposters || []).find(
+            (itm) => itm.id === voteOutPlayer?.id
+          )
+        }
+        handleClose={() => voteEvent?.setVoteEvent(undefined)}
+      />
+      <Tab.Navigator screenOptions={screenOptions}>
+        <Tab.Screen name="RoomMap" options={{ title: "Game" }}>
+          {() => (
+            <RoomMap
+              checkPoints={room.game.checkPoints}
+              region={room.game}
+              isImposter={room.isImposter}
+            />
+          )}
+        </Tab.Screen>
+        <Tab.Screen name="RoomParticipants" options={{ title: "Participants" }}>
+          {() => (
+            <RoomParticipants
+              participants={room.participants}
+              survivers={room.survivers}
+              voteEventId={voteEvent?.id}
+              votes={voteEvent?.votes || []}
+            />
+          )}
+        </Tab.Screen>
+        <Tab.Screen name="RoomInfo" options={{ title: "Info." }}>
+          {() => (
+            <RoomInfo
+              durationMinute={room.game.durationMinute}
+              imposterCount={room.game.imposterCount}
+              maxParticipantCount={room.game.maxParticipantCount}
+              totalTask={room.game.totalTask}
+              {...room}
+              isEnded={room.isEnded && !voteEvent?.id} // is there is a voting going on, not showing the ending result
+              participantCount={room.participants.length}
+            />
+          )}
+        </Tab.Screen>
+      </Tab.Navigator>
+    </>
   );
 }
 
