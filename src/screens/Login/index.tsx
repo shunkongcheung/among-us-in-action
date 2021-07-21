@@ -88,7 +88,9 @@ const Login: React.FC = () => {
               onPress={() =>
                 setModalState({
                   fieldName: "hat",
-                  options: HATS.map(({ source, name }) => ({
+                  options: HATS.filter(
+                    (itm) => itm.name !== "question-mark"
+                  ).map(({ source, name }) => ({
                     value: name,
                     children: (
                       <AspectRatio ratio={1 / 1} height={5}>
