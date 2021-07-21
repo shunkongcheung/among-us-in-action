@@ -86,8 +86,8 @@ const EditGameInfo: React.FC = () => {
               <NumberInput
                 p={2}
                 value={values.durationMinute as any}
-                onChange={(val: any) => setFieldValue("minuteDuration", val)}
-                min={2}
+                onChange={(val: any) => setFieldValue("durationMinute", val)}
+                min={1}
               >
                 <NumberInputField p={2} />
                 <NumberInputStepper>
