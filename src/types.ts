@@ -5,7 +5,7 @@ interface CheckPoint {
   task: Task;
 }
 
-export interface Game {
+interface Game {
   id: number;
   name: string;
   maxParticipantCount: number;
