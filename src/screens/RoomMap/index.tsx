@@ -3,10 +3,17 @@ import React, { memo } from "react";
 
 import { Map } from "../../components";
 import { Region } from "../../components/Map";
-import { CheckPoint } from "../../types";
+import { Task } from "../../types";
 
 import CharacterModal from "./CharacterModal";
 import useMap from "./useMap";
+
+interface CheckPoint {
+  id: number;
+  latitude: number;
+  longitude: number;
+  task: Task;
+}
 
 interface RoomMapProps {
   checkPoints: Array<CheckPoint>;

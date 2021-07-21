@@ -46,7 +46,7 @@ const Map: React.FC<MapProps> = ({
   onLongPress,
   onRegionChange,
 }) => {
-  const { location: userLocation } = useUserContext();
+  const user = useUserContext();
   const [region, setRegion] = React.useState(initialRegion);
   const mapRef = React.useRef<MapView>(null);
 
@@ -65,7 +65,8 @@ const Map: React.FC<MapProps> = ({
       // if location should be set to current
       if (!!isCurrentRegion) {
         setRegion({
-          ...userLocation,
+          latitude: user.latitude,
+          longitude: user.longitude,
           latitudeDelta: 0.00922,
           longitudeDelta: 0.00421,
         });
@@ -78,7 +79,7 @@ const Map: React.FC<MapProps> = ({
         });
       }
     })();
-  }, [isCurrentRegion, isCampassed, userLocation, setRegion]);
+  }, [isCurrentRegion, isCampassed, user.latitude, user.longitude, setRegion]);
 
   return (
     <Box flex={1}>

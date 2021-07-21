@@ -1,4 +1,4 @@
-export interface CheckPoint {
+interface CheckPoint {
   id: number;
   latitude: number;
   longitude: number;
@@ -43,6 +43,8 @@ export interface Player {
   name: string;
   color: string;
   hat: string;
+  latitude: number;
+  longitude: number;
 }
 
 export enum Task {

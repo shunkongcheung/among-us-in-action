@@ -53,6 +53,8 @@ const ROOM_SUBSCRIPTION = gql`
         name
         color
         hat
+        latitude
+        longitude
       }
       imposters {
         id
