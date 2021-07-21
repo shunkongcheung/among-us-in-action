@@ -24,7 +24,7 @@ export interface MarkerProps {
 }
 
 interface MapProps {
-  initialRegion?: Region;
+  initialRegion?: Partial<Region>;
   isCurrentRegion?: boolean;
   is3d?: boolean;
   isCampassed?: boolean;
@@ -45,7 +45,13 @@ const Map: React.FC<MapProps> = ({
   onRegionChange,
 }) => {
   const user = useUserContext();
-  const [region, setRegion] = React.useState(initialRegion);
+  const [region, setRegion] = React.useState({
+    latitudeDelta: 0.00922,
+    longitudeDelta: 0.00421,
+    latitude: 43.653225,
+    longitude: -79.383186,
+    ...initialRegion,
+  });
   const mapRef = React.useRef<MapView>(null);
 
   const onLongPressLocal = React.useCallback(
@@ -62,12 +68,11 @@ const Map: React.FC<MapProps> = ({
     (async () => {
       // if location should be set to current
       if (!!isCurrentRegion) {
-        setRegion({
+        setRegion((o) => ({
+          ...o,
           latitude: user.latitude,
           longitude: user.longitude,
-          latitudeDelta: 0.00922,
-          longitudeDelta: 0.00421,
-        });
+        }));
       }
 
       // if is directed
@@ -85,7 +90,7 @@ const Map: React.FC<MapProps> = ({
         <MapView
           style={{ width: "100%", height: "100%" }}
           initialCamera={{
-            altitude: 1094,
+            altitude: is3d ? 250 : 1094,
             pitch: is3d ? 55 : 0,
             heading: 0,
             center: region!,
