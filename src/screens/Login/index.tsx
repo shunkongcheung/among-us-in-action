@@ -14,7 +14,6 @@ import {
 import { AppBar } from "../../components";
 import { HATS, COLORS } from "../../constants";
 import { getRandomName } from "../../utils";
-import { Player } from "../../types";
 
 import OptionModal from "./OptionModal";
 import useRegister from "./useRegister";
@@ -25,20 +24,25 @@ interface ModalState {
   options: Array<{ children: ReactNode; value: any }>;
 }
 
+interface User {
+  name: string;
+  color: string;
+  hat: string;
+}
+
 const Login: React.FC = () => {
   const { navigate } = useNavigation();
   const user = useUserContext();
   const register = useRegister();
 
   const { handleBlur, handleChange, handleSubmit, setFieldValue, values } =
-    useFormik({
+    useFormik<User>({
       initialValues: {
-        id: user?.id || -1,
         name: user?.name || getRandomName(),
         color: user?.color || "red",
         hat: user?.hat || HATS[0].name,
       },
-      onSubmit: async (user: Player) => {
+      onSubmit: async (user: User) => {
         await register(user);
         navigate("Lobby");
       },
@@ -52,7 +56,6 @@ const Login: React.FC = () => {
   React.useEffect(() => {
     // user load completed
     if (user.id !== -1) {
-      setFieldValue("id", user.id);
       setFieldValue("name", user.name);
       setFieldValue("color", user.color);
       setFieldValue("hat", user.hat);

@@ -11,9 +11,11 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import { HATS } from "../../constants";
-import { Player } from "../../types";
 
-interface ParticipantItemProps extends Player {
+interface ParticipantItemProps {
+  name: string;
+  hat: string;
+  color: string;
   isAlive: boolean;
   isThinking: boolean;
   isVoting: boolean;
@@ -48,7 +50,7 @@ const ParticipantItem: React.FC<ParticipantItemProps> = ({
           <Image
             source={require("../../../assets/player-icon.png")}
             size="sm"
-            alt={`Player of ${name}`}
+            alt={`Icon of ${name}`}
           />
         </Box>
         <VStack justifyContent="space-evenly" mr="auto" ml={2}>

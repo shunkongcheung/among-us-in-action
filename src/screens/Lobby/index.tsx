@@ -13,7 +13,11 @@ import { AppBar } from "../../components";
 import OptionItem from "./OptionItem";
 import JoinRoomModal from "./JoinRoomModal";
 import { useJoin, useLocalGames } from "../../hooks";
-import { Game } from "../../types";
+
+interface Game {
+  id: number;
+  name: string;
+}
 
 const Lobby: React.FC = () => {
   const { navigate } = useNavigation();
@@ -23,6 +27,23 @@ const Lobby: React.FC = () => {
 
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
+
+  const gameData = React.useMemo(
+    () =>
+      games
+        .filter(({ name }: Game) =>
+          !!search ? name.toLowerCase().includes(search) : true
+        )
+        .map(({ id, name }: Game) => ({
+          id,
+          name,
+          onPress: async () => {
+            navigate("Room", { screen: "RoomInfo" });
+            await joinGame(id);
+          },
+        })),
+    [games]
+  );
 
   return (
     <>
@@ -45,18 +66,7 @@ const Lobby: React.FC = () => {
             onPress: () => navigate("EditGameInfo"),
           },
           { id: "join", name: "Join Room", onPress: () => setOpen(true) },
-          ...games
-            .filter(({ name }: Game) =>
-              !!search ? name.toLowerCase().includes(search) : true
-            )
-            .map(({ id, name }: Game) => ({
-              id,
-              name,
-              onPress: async () => {
-                navigate("Room", { screen: "RoomInfo" });
-                await joinGame(id);
-              },
-            })),
+          ...gameData,
         ]}
         renderItem={({ item }) => (
           <>

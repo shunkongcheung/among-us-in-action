@@ -3,11 +3,14 @@ import React, { memo } from "react";
 import uuid from "react-native-uuid";
 
 import { AppBar, Map } from "../../components";
-import { Location } from "../../components/Map";
-import { CheckPoint, Task } from "../../types";
+import { Task } from "../../constants";
 import useSubmit from "./useSubmit";
 
-interface EditCheckPointsProps {}
+interface CheckPoint {
+  latitude: number;
+  longitude: number;
+  task: Task;
+}
 
 interface FormInfo {
   name: string;
@@ -15,6 +18,11 @@ interface FormInfo {
   totalTask: number;
   durationMinute: number;
   imposterCount: number;
+}
+
+interface Location {
+  latitude: number;
+  longitude: number;
 }
 
 interface Markers {
@@ -27,7 +35,7 @@ const getRandomTask = (): Task => {
   return tasks[Math.floor(Math.random() * len)];
 };
 
-const EditCheckPoints: React.FC<EditCheckPointsProps> = () => {
+const EditCheckPoints: React.FC = () => {
   const { params } = useRoute();
   const { formInfo } = params as { formInfo: FormInfo };
 
@@ -47,7 +55,7 @@ const EditCheckPoints: React.FC<EditCheckPointsProps> = () => {
     (location: Location) =>
       setMarkers((o) => ({
         ...o,
-        [uuid.v4() as string]: { id: -1, ...location, task: getRandomTask() },
+        [uuid.v4() as string]: { ...location, task: getRandomTask() },
       })),
     [setMarkers]
   );
@@ -56,7 +64,7 @@ const EditCheckPoints: React.FC<EditCheckPointsProps> = () => {
     const checkPoints = Object.values(markers);
 
     navigate("Room", { screen: "RoomInfo" });
-    await submit({ id: -1, ...formInfo, ...region, checkPoints });
+    await submit({ ...formInfo, ...region, checkPoints });
   }, [markers, formInfo, region, submit, navigate]);
 
   const renderMarkers = React.useMemo(

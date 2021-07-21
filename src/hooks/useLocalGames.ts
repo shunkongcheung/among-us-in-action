@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Game } from "../types";
+
+interface Game {
+  id: number;
+  name: string;
+}
 
 const KEY_PREFIX = "@GAME";
-
 const MAX_COUNT = 50;
 
 const getAllKeys = async () => {

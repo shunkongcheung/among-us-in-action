@@ -1,5 +1,10 @@
 import { useMemo } from "react";
-import { CheckPoint } from "../../types";
+
+interface CheckPoint {
+  id: number;
+  latitude: number;
+  longitude: number;
+}
 
 function useMap(checkPoints: Array<CheckPoint>) {
   const markers = useMemo(() => {

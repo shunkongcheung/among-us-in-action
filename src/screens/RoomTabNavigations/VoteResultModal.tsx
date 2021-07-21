@@ -1,10 +1,8 @@
 import React, { memo } from "react";
 import { Image, Modal, PresenceTransition, Text } from "native-base";
 
-import { Player } from "../../types";
-
 interface VoteResultModalProps {
-  voteOutPlayer?: Player;
+  voteOutPlayer?: { name: string };
   isImposter: boolean;
   handleClose: () => any;
 }

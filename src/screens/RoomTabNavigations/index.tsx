@@ -90,7 +90,12 @@ function RoomTabNavigations() {
           {() => (
             <RoomMap
               checkPoints={room.game.checkPoints}
-              region={room.game}
+              region={{
+                latitude: room.game.latitude,
+                longitude: room.game.longitude,
+                latitudeDelta: room.game.latitudeDelta,
+                longitudeDelta: room.game.longitudeDelta,
+              }}
               isImposter={room.isImposter}
             />
           )}

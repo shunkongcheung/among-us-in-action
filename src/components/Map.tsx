@@ -4,17 +4,15 @@ import { watchHeadingAsync } from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import { useUserContext } from "../hooks";
 
-export interface Location {
+interface Location {
   latitude: number;
   longitude: number;
 }
 
-export interface Delta {
+interface Region extends Location {
   latitudeDelta: number;
   longitudeDelta: number;
 }
-
-export type Region = Location & Delta;
 
 type RegionCallback = (o: Region) => any;
 
@@ -46,7 +44,7 @@ const Map: React.FC<MapProps> = ({
   onLongPress,
   onRegionChange,
 }) => {
-  const { location: userLocation } = useUserContext();
+  const user = useUserContext();
   const [region, setRegion] = React.useState(initialRegion);
   const mapRef = React.useRef<MapView>(null);
 
@@ -65,7 +63,8 @@ const Map: React.FC<MapProps> = ({
       // if location should be set to current
       if (!!isCurrentRegion) {
         setRegion({
-          ...userLocation,
+          latitude: user.latitude,
+          longitude: user.longitude,
           latitudeDelta: 0.00922,
           longitudeDelta: 0.00421,
         });
@@ -78,7 +77,7 @@ const Map: React.FC<MapProps> = ({
         });
       }
     })();
-  }, [isCurrentRegion, isCampassed, userLocation, setRegion]);
+  }, [isCurrentRegion, isCampassed, user.latitude, user.longitude, setRegion]);
 
   return (
     <Box flex={1}>
