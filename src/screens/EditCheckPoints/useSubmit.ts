@@ -43,14 +43,9 @@ function useSubmit() {
     async (gameInput: GameInput) => {
       const game = JSON.parse(JSON.stringify(gameInput));
 
-      console.warn({ gameInput });
-      try {
         const { data } = await createGame({ variables: { game } });
         const gameId = data!.createGame.id;
         return joinGame(gameId);
-      } catch (err) {
-        console.warn({ err });
-      }
     },
     [createGame, joinGame]
   );
