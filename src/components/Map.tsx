@@ -87,7 +87,7 @@ const Map: React.FC<MapProps> = ({
           style={{ width: "100%", height: "100%" }}
           initialCamera={{
             altitude: is3d ? 250 : 1094,
-            pitch: is3d ? 55 : 0,
+            pitch: is3d ? 35 : 0,
             heading: 0,
             center: region!,
             zoom: 1,
