@@ -6,6 +6,7 @@ import { Map } from "../../components";
 import { Task } from "../../constants";
 
 import CharacterModal from "./CharacterModal";
+import InfoModal from "./InfoModal";
 import RoomControls from "./RoomControls";
 import useTasks from "./useTasks";
 import useKillable from "./useKillable";
@@ -54,6 +55,7 @@ const RoomMap: React.FC<RoomMapProps> = ({
         isImposter={isImposter || false}
         handleClose={() => setIsCharacterModal(false)}
       />
+      <InfoModal />
       <Map
         initialRegion={{
           ...region,

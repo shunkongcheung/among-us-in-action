@@ -17,6 +17,7 @@ const RoomControls: React.FC<RoomControlsProps> = ({
   task,
 }) => {
   const theme = useTheme();
+  console.warn({ makeKill });
   return (
     <VStack>
       {isImposter ? (

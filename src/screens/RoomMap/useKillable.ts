@@ -85,11 +85,12 @@ function useKillable(roomId: number, survivers: Array<SimplePlayer>) {
     if (!killable) return undefined;
 
     return async () => {
+      setPlayers((itm) => itm.filter((itm) => itm.id !== killable.id));
       kill({
         variables: { roomId, latitude, longitude, playerId: killable.id },
       });
     };
-  }, [latitude, longitude, roomId, players]);
+  }, [latitude, longitude, roomId, players, setPlayers]);
 
   useEffect(() => {
     if (!playerLocation) return;
