@@ -1,20 +1,19 @@
 import React, { memo } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { Text, Modal, PresenceTransition, Image } from "native-base";
 
 interface ResultModalProps {
+  handleClose: () => any;
   isOpen: boolean;
   isImposter: boolean;
   isImposterWin: boolean;
 }
 
 const ResultModal: React.FC<ResultModalProps> = ({
+  handleClose,
   isOpen,
   isImposter,
   isImposterWin,
 }) => {
-  const { navigate } = useNavigation();
-
   const [isResult, setIsResult] = React.useState(false);
 
   React.useEffect(() => {
@@ -22,7 +21,7 @@ const ResultModal: React.FC<ResultModalProps> = ({
   }, [isOpen]);
 
   return (
-    <Modal isOpen={isOpen} onClose={() => navigate("Lobby")}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <Modal.Content>
         <Modal.Header alignItems="center">
           <Text fontWeight="bold" fontSize="xl">

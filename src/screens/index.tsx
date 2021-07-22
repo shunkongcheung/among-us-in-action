@@ -15,7 +15,9 @@ const Stack = createStackNavigator();
 const Navigations: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false, gestureEnabled: false }}
+      >
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Lobby" component={Lobby} />
         <Stack.Screen name="EditGameInfo" component={EditGameInfo} />
