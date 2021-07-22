@@ -5,6 +5,7 @@ import { gql, useMutation } from "@apollo/client";
 
 import Desc from "./Desc";
 import ResultModal from "./ResultModal";
+import { useNavigation } from "@react-navigation/native";
 
 const START_ROOM = gql`
   mutation StartRoom($roomId: Float!) {
@@ -62,6 +63,10 @@ const RoomInfo: React.FC<RoomInfoProps> = (props) => {
   const theme = useTheme();
   const themeColor = theme.colors.primary[500];
 
+  const { navigate } = useNavigation();
+
+  const [isOpen, setIsOpen] = React.useState(false);
+
   const onStartRoom = React.useCallback(async () => {
     await startRoom({ variables: { roomId: id } });
   }, [id]);
@@ -72,23 +77,28 @@ const RoomInfo: React.FC<RoomInfoProps> = (props) => {
 
   const character = isImposter ? "Imposter" : "Crewmate";
 
+  React.useEffect(() => {
+    if (isEnded) setIsOpen(true);
+  }, [isEnded]);
+
   return (
     <>
       <ResultModal
+        handleClose={() => setIsOpen(false)}
         isImposter={isImposter}
         isImposterWin={isImposterWin}
-        isOpen={isEnded}
+        isOpen={isOpen}
       />
       <StatusBar backgroundColor={themeColor} barStyle="light-content" />
       <Box
         py="auto"
-        height="55%"
+        height="40%"
         alignItems="center"
         justifyContent="center"
         backgroundColor={themeColor}
         borderBottomLeftRadius={70}
       >
-        <QRCode value={code} size={150} />
+        <QRCode value={code} size={90} />
         <Text mt={5} fontWeight="bold" style={{ color: "#eee" }} fontSize="lg">
           {code}
         </Text>
@@ -99,16 +109,26 @@ const RoomInfo: React.FC<RoomInfoProps> = (props) => {
         <Desc title="Task">{`${completeCount}/${totalTask}`}</Desc>
         <Desc title="Duration (Min)">{`${minutePast}/${durationMinute} `}</Desc>
         {!!isStarted && <Desc title="Character">{character}</Desc>}
-        {!!isReadyToStart && !isStarted && (
-          <Button mt="auto" variant="solid" onPress={onStartRoom}>
-            Start
+        <Box mt="auto">
+          {!!isReadyToStart && !isStarted && (
+            <Button variant="solid" onPress={onStartRoom}>
+              Start
+            </Button>
+          )}
+          {!!isStarted && !isEnded && (
+            <Button variant="solid" onPress={onStartVote}>
+              Vote
+            </Button>
+          )}
+          <Button
+            mt={2}
+            variant="solid"
+            onPress={() => navigate("Lobby")}
+            backgroundColor={theme.colors.red[500]}
+          >
+            Exit
           </Button>
-        )}
-        {!!isStarted && !isEnded && (
-          <Button mt="auto" variant="solid" onPress={onStartVote}>
-            Vote
-          </Button>
-        )}
+        </Box>
       </Box>
     </>
   );
