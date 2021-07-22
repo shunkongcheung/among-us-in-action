@@ -47,6 +47,15 @@ function useLocalGames() {
     [setGames]
   );
 
+  const removeGame = useCallback(
+    async (id: number) => {
+      const key = `${KEY_PREFIX}_${id}`;
+      setGames((o) => o.filter((itm) => itm.id !== id));
+      await AsyncStorage.removeItem(key);
+    },
+    [setGames]
+  );
+
   useEffect(() => {
     (async () => {
       const keys = await houseKeep();
@@ -55,7 +64,7 @@ function useLocalGames() {
     })();
   }, [getGames, setGames]);
 
-  return { games, storeGame };
+  return { games, removeGame, storeGame };
 }
 
 export default useLocalGames;
