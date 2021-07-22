@@ -1,4 +1,3 @@
-import getCurrentLocation from "./getCurrentLocation";
-import getRandomName from './getRandomName'
+import getRandomName from "./getRandomName";
 
-export { getCurrentLocation, getRandomName };
+export { getRandomName };

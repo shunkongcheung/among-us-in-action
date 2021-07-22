@@ -62,12 +62,13 @@ const Map: React.FC<MapProps> = ({
     (async () => {
       // if location should be set to current
       if (!!isCurrentRegion) {
-        setRegion({
+        setRegion((o) => ({
+          ...o,
           latitude: user.latitude,
           longitude: user.longitude,
           latitudeDelta: 0.00922,
           longitudeDelta: 0.00421,
-        });
+        }));
       }
 
       // if is directed
@@ -85,8 +86,8 @@ const Map: React.FC<MapProps> = ({
         <MapView
           style={{ width: "100%", height: "100%" }}
           initialCamera={{
-            altitude: 1094,
-            pitch: is3d ? 55 : 0,
+            altitude: is3d ? 250 : 1094,
+            pitch: is3d ? 35 : 0,
             heading: 0,
             center: region!,
             zoom: 1,
